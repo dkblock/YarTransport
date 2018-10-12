@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportLibrary", "D:\Confirmit\YarTransport\YarTransport\TransportLibrary\TransportLibrary.csproj", "{AEEFE54D-990D-424F-AD05-D36D6BF4B2D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMap", "GMap\GMap.csproj", "{46C1C60B-22E7-4F42-9F9F-6250BECA3DCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEEFE54D-990D-424F-AD05-D36D6BF4B2D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEEFE54D-990D-424F-AD05-D36D6BF4B2D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEEFE54D-990D-424F-AD05-D36D6BF4B2D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEEFE54D-990D-424F-AD05-D36D6BF4B2D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C1C60B-22E7-4F42-9F9F-6250BECA3DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C1C60B-22E7-4F42-9F9F-6250BECA3DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C1C60B-22E7-4F42-9F9F-6250BECA3DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C1C60B-22E7-4F42-9F9F-6250BECA3DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F53F59E4-2700-4AB9-A0F7-183F60F0411E}
+	EndGlobalSection
+EndGlobal

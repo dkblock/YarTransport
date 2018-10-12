@@ -1,0 +1,25 @@
+﻿<Window x:Class="YarTransportGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YarTransportGUI"
+        mc:Ignorable="d"
+        Title="Чё приедет" Height="450" Width="800" ResizeMode="NoResize">
+    <Grid Margin="0,0,4,0">
+        <TextBox Name="TB_PointOfDeparture" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="678"/>
+        <Popup Name="Popup_StationsOfDeparture" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDeparture}" MinWidth="770">
+            <StackPanel>
+                <ListBox Name="LB_StationsOfDeparture" PreviewMouseDown="LB_StationsOfDeparture_PreviewMouseDown"/>
+            </StackPanel>
+        </Popup>
+        <TextBox Name="TB_PointOfDestination" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="678"/>
+        <Popup Name="Popup_StationsOfDestination" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDestination}" MinWidth="770">
+            <StackPanel>
+                <ListBox Name="LB_StationsOfDestination" PreviewMouseDown="LB_StationsOfDestination_PreviewMouseDown"/>
+            </StackPanel>
+        </Popup>
+        <Button Name="Btn_Where7" Content="Где тралек?" HorizontalAlignment="Left" Margin="10,391,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Where7_Click"/>
+        <TextBox Name="TB_Locator" HorizontalAlignment="Left" Height="345" Margin="90,66,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="598"/>
+    </Grid>
+</Window>
