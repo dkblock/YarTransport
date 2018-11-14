@@ -39,6 +39,9 @@
     <Reference Include="GMap.NET.WindowsForms">
       <HintPath>.\GMap.NET.WindowsForms.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.8.10.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.8.10\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -74,6 +77,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -88,7 +92,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\Confirmit\YarTransport\YarTransport\TransportLibrary\TransportLibrary.csproj">
+    <ProjectReference Include="..\..\RoutesCreator\RoutesCreator.csproj">
+      <Project>{e3120c7a-befc-48b1-b6b5-ff793ef208cd}</Project>
+      <Name>RoutesCreator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TransportLibrary\TransportLibrary.csproj">
       <Project>{aeefe54d-990d-424f-ad05-d36d6bf4b2d0}</Project>
       <Name>TransportLibrary</Name>
     </ProjectReference>

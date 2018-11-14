@@ -96,6 +96,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SearchWaySystem\SearchWaySystem.csproj">
+      <Project>{56f00ffa-74e1-4b8b-b830-66b9ca00b82e}</Project>
+      <Name>SearchWaySystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TransportLibrary\TransportLibrary.csproj">
       <Project>{aeefe54d-990d-424f-ad05-d36d6bf4b2d0}</Project>
       <Name>TransportLibrary</Name>

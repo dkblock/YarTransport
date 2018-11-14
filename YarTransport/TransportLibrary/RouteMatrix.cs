@@ -20,6 +20,11 @@ namespace TransportLibrary
             FillMatrix(route, stationsOnReverseRoute, allStations);
         }
 
+        public List<Route> GetRoutes(int indexOfDeparture, int indexOfDestination)
+        {
+            return RouteList[indexOfDeparture][indexOfDestination];
+        }
+
         private void AddNewStations(AllStations allStations)
         {
             if (RouteList.Count < allStations.Count)
@@ -45,9 +50,9 @@ namespace TransportLibrary
 
         private void FillMatrix(Route route, List<string> stationsOnCurrentDirection, AllStations allStations)
         {
-            for(int i=0; i<stationsOnCurrentDirection.Count;i++)
+            for (int i = 0; i < stationsOnCurrentDirection.Count; i++)
             {
-                for(int j=i+1; j<stationsOnCurrentDirection.Count;j++)
+                for (int j = i + 1; j < stationsOnCurrentDirection.Count; j++)
                 {
                     var stationOfDeparture = allStations[stationsOnCurrentDirection[i]];
                     var stationOfDestination = allStations[stationsOnCurrentDirection[j]];
