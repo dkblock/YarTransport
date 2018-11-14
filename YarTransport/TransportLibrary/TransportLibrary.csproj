@@ -47,15 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllRoutes.cs" />
     <Compile Include="AllStations.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteContent.cs" />
     <Compile Include="RouteMatrix.cs" />
-    <Compile Include="Schedule.cs" />
     <Compile Include="Station.cs" />
-    <Compile Include="StationsLoader.cs" />
-    <Compile Include="Locator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

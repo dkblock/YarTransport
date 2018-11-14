@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using SearchWaySystem;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -11,19 +14,19 @@ namespace YarTransportGUI
     public partial class MainWindow : Window
     {
         private List<string> _stations;
+        private Searcher _searcher;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            StationsLoader.Load();
-            _stations = StationsLoader.StationsList;
-
-            Init(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
-            Init(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
+            _searcher = new Searcher();
+            InitStations();
+            InitPopups(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
+            InitPopups(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
         }
 
-        private void Init(TextBox textBox, Popup popup, ListBox listBox)
+        private void InitPopups(TextBox textBox, Popup popup, ListBox listBox)
         {
             textBox.TextChanged += (sender, e) =>
             {
@@ -45,6 +48,21 @@ namespace YarTransportGUI
             };
         }
 
+        private void InitStations()
+        {
+            var formatter = new BinaryFormatter();
+
+            using (FileStream fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
+            {
+                var allStations = (AllStations)formatter.Deserialize(fs);
+                _stations = new List<string>();
+
+                for (int i = 0; i < allStations.Count; i++)
+                    _stations.Add(allStations.GetStation(i).StationName);
+
+            }
+        }
+
         private void LB_StationsOfDeparture_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             var item = ItemsControl.ContainerFromElement(LB_StationsOfDeparture, e.OriginalSource as DependencyObject) as ListBoxItem;
@@ -59,11 +77,34 @@ namespace YarTransportGUI
             Popup_StationsOfDestination.IsOpen = false;
         }
 
-        private void Btn_Where7_Click(object sender, RoutedEventArgs e)
+        private void Btn_Search_Click(object sender, RoutedEventArgs e)
         {
-            Locator transportLocator = new Locator();
-            TB_Locator.Clear();
-            TB_Locator.Text = transportLocator.Locate(8);
+            var stationOfDeparture = TB_PointOfDeparture.Text;
+            var stationOfDestination = TB_PointOfDestination.Text;
+
+            if (stationOfDeparture.Length > 0 && stationOfDestination.Length > 0)
+            {
+                var routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination);
+                DisplayRoutes(routes);
+            }
+        }
+
+        private void DisplayRoutes(List<RouteInfo> routes)
+        {
+            TB_Routes.Clear();
+            TB_Routes.AppendText($"От: {TB_PointOfDeparture.Text}\n");
+            TB_Routes.AppendText($"До: {TB_PointOfDestination.Text}\n\n");
+
+            foreach (var route in routes)
+            {
+                TB_Routes.AppendText($"{route.RouteType}\n");
+                TB_Routes.AppendText($"{route.TransportModel}\n");
+
+                foreach(var scheduleItem in route.Schedule)
+                    TB_Routes.AppendText($"{scheduleItem.ToString()}\n");
+
+                TB_Routes.AppendText($"\n");
+            }
         }
     }
 }
