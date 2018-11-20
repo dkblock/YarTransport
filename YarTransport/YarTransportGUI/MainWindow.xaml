@@ -8,13 +8,13 @@
         Title="YarTransport" Height="640" Width="360" ResizeMode="NoResize">
     <Grid Margin="0,0,4,0">
         <TextBox Name="TB_PointOfDeparture" Height="23" Margin="11,123,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-        <Popup Name="Popup_StationsOfDeparture" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDeparture}" MinWidth="328">
+        <Popup Name="Popup_StationsOfDeparture" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDeparture}" MinWidth="318">
             <StackPanel>
                 <ListBox Name="LB_StationsOfDeparture" PreviewMouseDown="LB_StationsOfDeparture_PreviewMouseDown"/>
             </StackPanel>
         </Popup>
         <TextBox Name="TB_PointOfDestination" Height="23" Margin="11,151,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-        <Popup Name="Popup_StationsOfDestination" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDestination}" MinWidth="328">
+        <Popup Name="Popup_StationsOfDestination" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDestination}" MinWidth="318">
             <StackPanel>
                 <ListBox Name="LB_StationsOfDestination" PreviewMouseDown="LB_StationsOfDestination_PreviewMouseDown"/>
             </StackPanel>

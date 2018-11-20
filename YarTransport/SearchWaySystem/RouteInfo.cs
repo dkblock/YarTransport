@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SearchWaySystem
 {
@@ -7,12 +8,19 @@ namespace SearchWaySystem
         public string RouteType { get; private set; }
         public string TransportModel { get; private set; }
         public List<ScheduleNode> Schedule { get; private set; } 
+        public string ArrivalTime { get; private set; }
 
-        public RouteInfo(string routeType, string transportModel, List<ScheduleNode> schedule)
+        public RouteInfo(string routeType, string transportModel, List<ScheduleNode> schedule, string pointOfDeparture)
         {
             RouteType = routeType;
             Schedule = schedule;
             TransportModel = transportModel;
+            ArrivalTime = GetArrivalTime(pointOfDeparture);
+        }
+
+        private string GetArrivalTime(string pointOfDeparture)
+        {
+            return (from t in Schedule where t.StationName == pointOfDeparture select t.Time).FirstOrDefault();
         }
     }
 
