@@ -96,15 +96,7 @@ namespace YarTransportGUI
             TB_Routes.AppendText($"До: {TB_PointOfDestination.Text}\n\n");
 
             foreach (var route in routes)
-            {
-                TB_Routes.AppendText($"{route.RouteType}\n");
-                TB_Routes.AppendText($"{route.TransportModel}\n");
-
-                foreach(var scheduleItem in route.Schedule)
-                    TB_Routes.AppendText($"{scheduleItem.ToString()}\n");
-
-                TB_Routes.AppendText($"\n");
-            }
+                TB_Routes.AppendText($"{route.RouteType}\t \t \t \t \t {route.ArrivalTime}\n");
         }
     }
 }
