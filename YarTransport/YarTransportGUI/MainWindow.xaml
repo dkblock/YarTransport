@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:YarTransportGUI"
         mc:Ignorable="d"
         Title="YarTransport" Height="640" Width="360" ResizeMode="NoResize">
-    <Grid Margin="0,0,4,0">
+    <Grid>
+    <Grid Name="Grid_MainWindow" Margin="0,0,4,0">
         <TextBox Name="TB_PointOfDeparture" Height="23" Margin="11,123,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
         <Popup Name="Popup_StationsOfDeparture" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDeparture}" MinWidth="318">
             <StackPanel>
@@ -20,6 +21,11 @@
             </StackPanel>
         </Popup>
         <Button Name="Btn_Search" Content="Поиск" Margin="57,179,57,0" VerticalAlignment="Top" Click="Btn_Search_Click"/>
-        <TextBox Name="TB_Routes" HorizontalAlignment="Left" Margin="11,204,0,10" TextWrapping="Wrap" Text="" Width="328" IsReadOnly="True"/>
+            <ListBox Name="LB_Routes" Margin="11,208,11,20" PreviewMouseDoubleClick="LB_Routes_PreviewMouseDoubleClick"/>
+        </Grid>
+        <Grid Name="Grid_RouteInfo" HorizontalAlignment="Left" Height="611" VerticalAlignment="Top" Width="350" Visibility="Collapsed">
+            <TextBox Name="TB_RouteInfo" Height="536" Margin="10,10,20,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Button Name="Btn_back" Content="Назад" HorizontalAlignment="Left" Margin="10,551,0,0" VerticalAlignment="Top" Width="75" Click="Btn_back_Click"/>
+        </Grid>
     </Grid>
 </Window>

@@ -15,6 +15,7 @@ namespace YarTransportGUI
     {
         private List<string> _stations;
         private Searcher _searcher;
+        private List<RouteInfo> _routes;
 
         public MainWindow()
         {
@@ -59,7 +60,6 @@ namespace YarTransportGUI
 
                 for (int i = 0; i < allStations.Count; i++)
                     _stations.Add(allStations.GetStation(i).StationName);
-
             }
         }
 
@@ -84,19 +84,38 @@ namespace YarTransportGUI
 
             if (stationOfDeparture.Length > 0 && stationOfDestination.Length > 0)
             {
-                var routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination);
-                DisplayRoutes(routes);
+                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination);
+                DisplayRoutes(_routes);
             }
         }
 
         private void DisplayRoutes(List<RouteInfo> routes)
         {
-            TB_Routes.Clear();
-            TB_Routes.AppendText($"От: {TB_PointOfDeparture.Text}\n");
-            TB_Routes.AppendText($"До: {TB_PointOfDestination.Text}\n\n");
+            LB_Routes.Items.Clear();
 
             foreach (var route in routes)
-                TB_Routes.AppendText($"{route.RouteType}\t \t \t \t \t {route.ArrivalTime}\n");
+                LB_Routes.Items.Add($"{route.RouteType}\t\t\t{route.ArrivalTime}");
+        }
+
+        private void Btn_back_Click(object sender, RoutedEventArgs e)
+        {
+            Grid_RouteInfo.Visibility = Visibility.Collapsed;
+            Grid_MainWindow.Visibility = Visibility.Visible;
+        }
+
+        private void LB_Routes_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var route = _routes[LB_Routes.SelectedIndex];
+
+            Grid_MainWindow.Visibility = Visibility.Collapsed;
+            Grid_RouteInfo.Visibility = Visibility.Visible;
+
+            TB_RouteInfo.Clear();
+            TB_RouteInfo.AppendText($"{route.RouteType}\n");
+            TB_RouteInfo.AppendText($"{route.TransportModel}\n\n");
+
+            foreach (var node in route.Schedule)
+                TB_RouteInfo.AppendText($"{node.ToString()}\n");
         }
     }
 }
