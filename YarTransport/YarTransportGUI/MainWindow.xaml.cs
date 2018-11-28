@@ -84,7 +84,11 @@ namespace YarTransportGUI
 
             if (stationOfDeparture.Length > 0 && stationOfDestination.Length > 0)
             {
-                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination);
+                var isBusChecked = CB_Bus.IsChecked ?? false;
+                var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
+                var isTramChecked = CB_Tram.IsChecked ?? false;
+
+                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked);
                 DisplayRoutes(_routes);
             }
         }

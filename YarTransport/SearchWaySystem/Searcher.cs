@@ -35,11 +35,12 @@ namespace SearchWaySystem
             _htmlWorker = new HtmlWorker();
         }
 
-        public List<RouteInfo> GetRoutes(string pointOfDeparture, string pointOfDestination)
+        public List<RouteInfo> GetRoutes(string pointOfDeparture, string pointOfDestination, bool isBusChecked, bool isTrolleyChecked, bool isTramChecked)
         {
             var indexOfDeparture = _allStations[pointOfDeparture];
             var indexOfDestination = _allStations[pointOfDestination];
             var routesForSearch = _routeMatrix.GetRoutes(indexOfDeparture, indexOfDestination);
+            routesForSearch = RemoveNonSelectedTransport(routesForSearch, isBusChecked, isTrolleyChecked, isTramChecked);
             var routesInfo = new List<RouteInfo>();
 
             for (int i = 0; i < routesForSearch.Count; i++)
@@ -64,6 +65,23 @@ namespace SearchWaySystem
             routesInfo = (from t in routesInfo orderby t.ArrivalTime, t.RouteType select t).ToList();
 
             return routesInfo;
+        }
+
+        private List<Route> RemoveNonSelectedTransport(List<Route> routesForSearch, bool isBusChecked, bool isTrolleyChecked, bool isTramChecked)
+        {
+            var item = new List<Route>();
+            item.AddRange(routesForSearch);
+
+            if (!isBusChecked)
+                item.RemoveAll(x => x.TransportType == Transport.Bus);
+
+            if (!isTrolleyChecked)
+                item.RemoveAll(x => x.TransportType == Transport.Trolley);
+
+            if (!isTramChecked)
+                item.RemoveAll(x => x.TransportType == Transport.Tram);
+
+            return item;
         }
 
         private bool GetRouteDirection(string pointOfDeparture, string pointOfDestination, List<string> directRoute)
