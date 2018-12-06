@@ -98,7 +98,7 @@ namespace YarTransportGUI
             LB_Routes.Items.Clear();
 
             foreach (var route in routes)
-                LB_Routes.Items.Add($"{route.RouteType}\t\t\t{route.ArrivalTime}");
+                LB_Routes.Items.Add($"{route.RouteType}\t\t\t{route.ArrivalTime.ToString()}");
         }
 
         private void Btn_back_Click(object sender, RoutedEventArgs e)
