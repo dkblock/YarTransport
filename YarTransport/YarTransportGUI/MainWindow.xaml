@@ -5,30 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YarTransportGUI"
         mc:Ignorable="d"
-        Title="YarTransport" Height="640" Width="360" ResizeMode="NoResize">
+        Title="YarTransport" Height="640" Width="360" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid Name="Grid_MainWindow" Margin="0,0,4,0">
-            <TextBox Name="TB_PointOfDeparture" Height="23" Margin="11,123,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-            <Popup Name="Popup_StationsOfDeparture" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDeparture}" MinWidth="318">
+            <TextBox Name="TB_PointOfDeparture" Height="23" Margin="35,123,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Popup Name="Popup_StationsOfDeparture" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDeparture}" MinWidth="294">
                 <StackPanel>
                     <ListBox Name="LB_StationsOfDeparture" PreviewMouseDown="LB_StationsOfDeparture_PreviewMouseDown"/>
                 </StackPanel>
             </Popup>
-            <TextBox Name="TB_PointOfDestination" Height="23" Margin="11,151,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-            <Popup Name="Popup_StationsOfDestination" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDestination}" MinWidth="318">
+            <TextBox Name="TB_PointOfDestination" Height="23" Margin="35,151,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Popup Name="Popup_StationsOfDestination" Placement="Bottom" PlacementTarget="{Binding ElementName=TB_PointOfDestination}" MinWidth="294">
                 <StackPanel>
                     <ListBox Name="LB_StationsOfDestination" PreviewMouseDown="LB_StationsOfDestination_PreviewMouseDown"/>
                 </StackPanel>
             </Popup>
-            <Button Name="Btn_Search" Content="Поиск" Margin="57,179,57,0" VerticalAlignment="Top" Click="Btn_Search_Click"/>
+            <Button Name="Btn_Search" Content="Поиск" Margin="57,179,57,0" VerticalAlignment="Top" Width="200" Click="Btn_Search_Click" HorizontalAlignment="Center"/>
             <ListBox Name="LB_Routes" Margin="11,208,11,20" PreviewMouseDoubleClick="LB_Routes_PreviewMouseDoubleClick"/>
-            <CheckBox Name="CB_Bus" Content="Автобус" HorizontalAlignment="Left" Margin="11,43,0,0" VerticalAlignment="Top"/>
-            <CheckBox Name="CB_Trolley" Content="Троллейбус" HorizontalAlignment="Left" Margin="11,63,0,0" VerticalAlignment="Top"/>
-            <CheckBox Name="CB_Tram" Content="Трамвай" HorizontalAlignment="Left" Margin="11,83,0,0" VerticalAlignment="Top"/>
+            <Ellipse Fill="#FF4296EA" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" VerticalAlignment="Top" Width="23"/>
+            <Ellipse Fill="#FFFF3333" HorizontalAlignment="Left" Height="23" Margin="10,123,0,0" VerticalAlignment="Top" Width="23"/>
+            <GroupBox Header="Транспорт" HorizontalAlignment="Left" Height="86" Margin="11,10,0,0" VerticalAlignment="Top" Width="100">
+                <Grid HorizontalAlignment="Left" Height="86" Margin="0,-10,-2,-12" VerticalAlignment="Top" Width="90">
+                    <CheckBox x:Name="CB_Bus" Content="Автобус" HorizontalAlignment="Left" Margin="0,18,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <CheckBox x:Name="CB_Trolley" Content="Троллейбус" HorizontalAlignment="Left" Margin="0,38,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <CheckBox x:Name="CB_Tram" Content="Трамвай" HorizontalAlignment="Left" Margin="0,58,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                </Grid>
+            </GroupBox>
+            <Label Content="A" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,123,0,0" VerticalAlignment="Top" Height="23" Width="23" FontFamily="Arial" Foreground="White" FontWeight="Bold"/>
+            <Label Content="B" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,151,0,0" VerticalAlignment="Top" Height="23" Width="23" FontFamily="Arial" Foreground="White" FontWeight="Bold"/>
         </Grid>
         <Grid Name="Grid_RouteInfo" HorizontalAlignment="Left" Height="611" VerticalAlignment="Top" Width="350" Visibility="Collapsed">
-            <TextBox Name="TB_RouteInfo" Height="536" Margin="10,10,20,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-            <Button Name="Btn_back" Content="Назад" HorizontalAlignment="Left" Margin="10,551,0,0" VerticalAlignment="Top" Width="75" Click="Btn_back_Click"/>
+            <TextBox Name="TB_RouteInfo" Height="536" Margin="10,10,20,0" TextWrapping="Wrap" IsReadOnly="True" Text="" VerticalAlignment="Top"/>
+            <Button Name="Btn_back" Content="Назад" HorizontalAlignment="Left" Margin="255,551,0,0" VerticalAlignment="Top" Width="75" Click="Btn_back_Click"/>
         </Grid>
     </Grid>
 </Window>

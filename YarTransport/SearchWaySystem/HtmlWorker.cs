@@ -30,11 +30,17 @@ namespace SearchWaySystem
                 var item = (from t in tableNodes where t.InnerText.Contains("Обратное направление") select t).FirstOrDefault();
                 var reverseRouteTableStart = tableNodes.IndexOf(item);
 
-                if (searchOnDirectRoute)
-                    return (from t in tableNodes
-                            where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) < reverseRouteTableStart select t).ToList();
+                if (reverseRouteTableStart != -1)
+                {
+                    if (searchOnDirectRoute)
+                        return (from t in tableNodes
+                                where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) < reverseRouteTableStart
+                                select t).ToList();
+                    else
+                        return (from t in tableNodes where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) > reverseRouteTableStart select t).ToList();
+                }
                 else
-                    return (from t in tableNodes where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) > reverseRouteTableStart select t).ToList();
+                    return new List<HtmlNode>();
             }
             else
                 return new List<HtmlNode>();
