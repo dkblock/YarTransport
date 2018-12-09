@@ -57,8 +57,12 @@
             </Rectangle>
         </Grid>
         <Grid Name="Grid_RouteInfo" HorizontalAlignment="Left" Height="611" VerticalAlignment="Top" Width="350" Visibility="Collapsed">
-            <TextBox Name="TB_RouteInfo" Height="536" Margin="10,10,20,0" TextWrapping="Wrap" IsReadOnly="True" Text="" VerticalAlignment="Top"/>
-            <Button Name="Btn_back" Content="Назад" HorizontalAlignment="Left" Margin="255,551,0,0" VerticalAlignment="Top" Width="75" Click="Btn_back_Click"/>
+            <TextBox Name="TB_RouteInfo" Height="553" Margin="10,10,20,0" TextWrapping="Wrap" IsReadOnly="True" Text="" VerticalAlignment="Top"/>
+            <Rectangle Name="Btn_Back" HorizontalAlignment="Left" Height="24" Margin="10,568,0,0" VerticalAlignment="Top" Width="24" ToolTip="Назад" MouseDown="Btn_Back_MouseDown" Cursor="Hand">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="pack://siteoforigin:,,,/pics/back.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
         </Grid>
     </Grid>
 </Window>

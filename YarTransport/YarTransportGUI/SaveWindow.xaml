@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YarTransportGUI"
         mc:Ignorable="d"
-        Title="Сохранить как" Height="150" Width="250" Icon="icon.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Сохранить как" Height="150" Width="250" Icon="icon.ico" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid Width="250">
         <TextBox x:Name="TB_RouteName" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="214"/>
         <Rectangle Name="Btn_Forward" HorizontalAlignment="Left" Height="24" Margin="200,77,0,0" VerticalAlignment="Top" Width="24" ToolTip="Далее" MouseDown="Btn_Forward_MouseDown" Cursor="Hand">

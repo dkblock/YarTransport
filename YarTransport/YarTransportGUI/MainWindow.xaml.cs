@@ -21,7 +21,7 @@ namespace YarTransportGUI
         public MainWindow()
         {
             InitializeComponent();
-             
+
             _searcher = InitSearcher();
             InitFavoriteRoutes();
             InitStations();
@@ -50,7 +50,7 @@ namespace YarTransportGUI
             {
                 routeMatrix = (RouteMatrix)formatter.Deserialize(fs);
             }
-            
+
             return new Searcher(allRoutes, allStations, routeMatrix);
         }
 
@@ -63,7 +63,7 @@ namespace YarTransportGUI
                 _favoriteRoutes = (FavoriteRoutes)formatter.Deserialize(fs);
             }
 
-            foreach(var favorite in _favoriteRoutes.FavoriteRoutesList)
+            foreach (var favorite in _favoriteRoutes.FavoriteRoutesList)
                 LB_Favorite.Items.Add($"{favorite.RouteName}");
 
             if (_favoriteRoutes.FavoriteRoutesList.Count == 0)
@@ -144,12 +144,6 @@ namespace YarTransportGUI
                 LB_Routes.Items.Add($"{route.RouteType}\t\t\t\t{route.ArrivalTime.ToString()}");
         }
 
-        private void Btn_back_Click(object sender, RoutedEventArgs e)
-        {
-            Grid_RouteInfo.Visibility = Visibility.Collapsed;
-            Grid_MainWindow.Visibility = Visibility.Visible;
-        }
-
         private void LB_Routes_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var route = _routes[LB_Routes.SelectedIndex];
@@ -183,29 +177,35 @@ namespace YarTransportGUI
 
         private void Btn_AddFavorite_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var sw = new SaveWindow(TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
+            var sw = new SaveWindow();
             sw.Owner = this;
 
             if (sw.ShowDialog() == true)
                 sw.Show();
 
-            var routeName = sw.RouteName;
-            _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
-            LB_Favorite.Items.Add($"{routeName}");
-            LB_Favorite.Visibility = Visibility.Visible;
+            if (sw.RouteName != "")
+            {
+                var routeName = sw.RouteName;
+                _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
+                LB_Favorite.Items.Add($"{routeName}");
+                LB_Favorite.Visibility = Visibility.Visible;
 
-            SerializeFavoriteRoutes();
+                SerializeFavoriteRoutes();
+            }
         }
 
         private void Btn_RemoveFavorite_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var route = _favoriteRoutes.FavoriteRoutesList[LB_Favorite.SelectedIndex];
-            _favoriteRoutes.Remove(route.RouteName);
-            LB_Favorite.Items.Remove(LB_Favorite.Items[LB_Favorite.SelectedIndex]);
-            SerializeFavoriteRoutes();
+            if (LB_Favorite.SelectedIndex != -1)
+            {
+                var route = _favoriteRoutes.FavoriteRoutesList[LB_Favorite.SelectedIndex];
+                _favoriteRoutes.Remove(route.RouteName);
+                LB_Favorite.Items.Remove(LB_Favorite.Items[LB_Favorite.SelectedIndex]);
+                SerializeFavoriteRoutes();
 
-            if (LB_Favorite.Items.Count == 0)
-                LB_Favorite.Visibility = Visibility.Collapsed;
+                if (LB_Favorite.Items.Count == 0)
+                    LB_Favorite.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void SerializeFavoriteRoutes()
@@ -221,13 +221,19 @@ namespace YarTransportGUI
         {
             TB_PointOfDeparture.Text = _favoriteRoutes.FavoriteRoutesList[LB_Favorite.SelectedIndex].PointOfDeparture;
             TB_PointOfDestination.Text = _favoriteRoutes.FavoriteRoutesList[LB_Favorite.SelectedIndex].PointOfDestination;
-            LB_Favorite.SelectedIndex = -1;
         }
 
         private void Btn_Clear_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TB_PointOfDeparture.Clear();
             TB_PointOfDestination.Clear();
+            LB_Routes.Items.Clear();
+        }
+
+        private void Btn_Back_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Grid_RouteInfo.Visibility = Visibility.Collapsed;
+            Grid_MainWindow.Visibility = Visibility.Visible;
         }
     }
 }
