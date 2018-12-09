@@ -27,20 +27,26 @@ namespace SearchWaySystem
 
             if (tableNodes != null)
             {
-                var item = (from t in tableNodes where t.InnerText.Contains("Обратное направление") select t).FirstOrDefault();
+                var item = (from t in tableNodes where t.InnerText.Contains("Прямое направление") select t).FirstOrDefault();
+                var directRouteTableStart = tableNodes.IndexOf(item);
+
+                item = (from t in tableNodes where t.InnerText.Contains("Обратное направление") select t).FirstOrDefault();
                 var reverseRouteTableStart = tableNodes.IndexOf(item);
 
-                if (reverseRouteTableStart != -1)
+                if (searchOnDirectRoute)
                 {
-                    if (searchOnDirectRoute)
-                        return (from t in tableNodes
-                                where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) < reverseRouteTableStart
-                                select t).ToList();
+                    if (reverseRouteTableStart != -1)
+                        return (from t in tableNodes where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) < reverseRouteTableStart select t).ToList();
                     else
-                        return (from t in tableNodes where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) > reverseRouteTableStart select t).ToList();
+                        return (from t in tableNodes where t.InnerText.Contains("Расписание") select t).ToList();
                 }
                 else
-                    return new List<HtmlNode>();
+                {
+                    if (reverseRouteTableStart != -1)
+                        return (from t in tableNodes where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) > reverseRouteTableStart select t).ToList();
+                    else
+                        return new List<HtmlNode>();
+                }
             }
             else
                 return new List<HtmlNode>();

@@ -38,7 +38,7 @@ namespace SearchWaySystem
 
         public override string ToString()
         {
-            return $"{StationName}  {Time.ToString()}";
+            return $"{Time.ToString()}  {StationName}";
         }
     }
 

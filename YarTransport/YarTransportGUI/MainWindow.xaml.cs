@@ -16,20 +16,63 @@ namespace YarTransportGUI
         private List<string> _stations;
         private Searcher _searcher;
         private List<RouteInfo> _routes;
+        private FavoriteRoutes _favoriteRoutes;
 
         public MainWindow()
         {
             InitializeComponent();
-
-            _searcher = new Searcher();
+             
+            _searcher = InitSearcher();
+            InitFavoriteRoutes();
             InitStations();
             InitPopups(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
             InitPopups(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
         }
 
+        private Searcher InitSearcher()
+        {
+            AllRoutes allRoutes;
+            AllStations allStations;
+            RouteMatrix routeMatrix;
+            var formatter = new BinaryFormatter();
+
+            using (var fs = new FileStream("allroutes.dat", FileMode.OpenOrCreate))
+            {
+                allRoutes = (AllRoutes)formatter.Deserialize(fs);
+            }
+
+            using (var fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
+            {
+                allStations = (AllStations)formatter.Deserialize(fs);
+            }
+
+            using (var fs = new FileStream("routematrix.dat", FileMode.OpenOrCreate))
+            {
+                routeMatrix = (RouteMatrix)formatter.Deserialize(fs);
+            }
+            
+            return new Searcher(allRoutes, allStations, routeMatrix);
+        }
+
+        private void InitFavoriteRoutes()
+        {
+            var formatter = new BinaryFormatter();
+
+            using (var fs = new FileStream("favoriteroutes.dat", FileMode.OpenOrCreate))
+            {
+                _favoriteRoutes = (FavoriteRoutes)formatter.Deserialize(fs);
+            }
+
+            foreach(var favorite in _favoriteRoutes.FavoriteRoutesList)
+                LB_Favorite.Items.Add($"{favorite.RouteName}");
+
+            if (_favoriteRoutes.FavoriteRoutesList.Count == 0)
+                LB_Favorite.Visibility = Visibility.Collapsed;
+        }
+
         private void InitPopups(TextBox textBox, Popup popup, ListBox listBox)
         {
-            textBox.TextChanged += (sender, e) =>
+            textBox.PreviewKeyUp += (sender, e) =>
             {
                 listBox.Items.Clear();
                 var result = _stations.Where(x => x.ToLower().Contains(textBox.Text.ToLower())).ToArray();
@@ -120,6 +163,71 @@ namespace YarTransportGUI
 
             foreach (var node in route.Schedule)
                 TB_RouteInfo.AppendText($"{node.ToString()}\n");
+        }
+
+        private void Btn_Search_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var stationOfDeparture = TB_PointOfDeparture.Text;
+            var stationOfDestination = TB_PointOfDestination.Text;
+
+            if (stationOfDeparture.Length > 0 && stationOfDestination.Length > 0)
+            {
+                var isBusChecked = CB_Bus.IsChecked ?? false;
+                var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
+                var isTramChecked = CB_Tram.IsChecked ?? false;
+
+                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked);
+                DisplayRoutes(_routes);
+            }
+        }
+
+        private void Btn_AddFavorite_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var sw = new SaveWindow(TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
+            sw.Owner = this;
+
+            if (sw.ShowDialog() == true)
+                sw.Show();
+
+            var routeName = sw.RouteName;
+            _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
+            LB_Favorite.Items.Add($"{routeName}");
+            LB_Favorite.Visibility = Visibility.Visible;
+
+            SerializeFavoriteRoutes();
+        }
+
+        private void Btn_RemoveFavorite_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var route = _favoriteRoutes.FavoriteRoutesList[LB_Favorite.SelectedIndex];
+            _favoriteRoutes.Remove(route.RouteName);
+            LB_Favorite.Items.Remove(LB_Favorite.Items[LB_Favorite.SelectedIndex]);
+            SerializeFavoriteRoutes();
+
+            if (LB_Favorite.Items.Count == 0)
+                LB_Favorite.Visibility = Visibility.Collapsed;
+        }
+
+        private void SerializeFavoriteRoutes()
+        {
+            using (var fs = new FileStream("favoriteroutes.dat", FileMode.OpenOrCreate))
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(fs, _favoriteRoutes);
+            }
+        }
+
+        private void LB_Favorite_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            TB_PointOfDeparture.Text = _favoriteRoutes.FavoriteRoutesList[LB_Favorite.SelectedIndex].PointOfDeparture;
+            TB_PointOfDestination.Text = _favoriteRoutes.FavoriteRoutesList[LB_Favorite.SelectedIndex].PointOfDestination;
+            LB_Favorite.SelectedIndex = -1;
+        }
+
+        private void Btn_Clear_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TB_PointOfDeparture.Clear();
+            TB_PointOfDestination.Clear();
         }
     }
 }

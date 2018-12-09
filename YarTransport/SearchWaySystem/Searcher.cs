@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using TransportLibrary;
 
 namespace SearchWaySystem
@@ -13,25 +11,11 @@ namespace SearchWaySystem
         private RouteMatrix _routeMatrix;
         private HtmlWorker _htmlWorker;
 
-        public Searcher()
+        public Searcher(AllRoutes allRoutes, AllStations allStations, RouteMatrix routeMatrix)
         {
-            var formatter = new BinaryFormatter();
-
-            using (FileStream fs = new FileStream("allroutes.dat", FileMode.OpenOrCreate))
-            {
-                _allRoutes = (AllRoutes)formatter.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
-            {
-                _allStations = (AllStations)formatter.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("routematrix.dat", FileMode.OpenOrCreate))
-            {
-                _routeMatrix = (RouteMatrix)formatter.Deserialize(fs);
-            }
-
+            _allRoutes = allRoutes;
+            _allStations = allStations;
+            _routeMatrix = routeMatrix;
             _htmlWorker = new HtmlWorker();
         }
 

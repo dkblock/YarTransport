@@ -19,8 +19,7 @@
                 <StackPanel>
                     <ListBox Name="LB_StationsOfDestination" PreviewMouseDown="LB_StationsOfDestination_PreviewMouseDown"/>
                 </StackPanel>
-            </Popup>
-            <Button Name="Btn_Search" Content="Поиск" Margin="57,179,57,0" VerticalAlignment="Top" Width="200" Click="Btn_Search_Click" HorizontalAlignment="Center"/>
+            </Popup>            
             <ListBox Name="LB_Routes" Margin="11,208,11,20" PreviewMouseDoubleClick="LB_Routes_PreviewMouseDoubleClick"/>
             <Ellipse Fill="#FF4296EA" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" VerticalAlignment="Top" Width="23"/>
             <Ellipse Fill="#FFFF3333" HorizontalAlignment="Left" Height="23" Margin="10,123,0,0" VerticalAlignment="Top" Width="23"/>
@@ -33,6 +32,29 @@
             </GroupBox>
             <Label Content="A" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,123,0,0" VerticalAlignment="Top" Height="23" Width="23" FontFamily="Arial" Foreground="White" FontWeight="Bold"/>
             <Label Content="B" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,151,0,0" VerticalAlignment="Top" Height="23" Width="23" FontFamily="Arial" Foreground="White" FontWeight="Bold"/>
+            <Expander Header="     Избранное" HorizontalAlignment="Left" Height="86" Margin="200,10,0,0" VerticalAlignment="Top" Width="129" IsExpanded="False">
+                <ListBox Name="LB_Favorite" HorizontalAlignment="Left" Height="63" Width="129" Margin="0,0,-2,0" PreviewMouseDoubleClick="LB_Favorite_PreviewMouseDoubleClick"/>
+            </Expander>
+            <Rectangle Name="Btn_RemoveFavorite" HorizontalAlignment="Left" Height="23" Margin="39,179,0,0" VerticalAlignment="Top" Width="23" ToolTip="Удалить маршрут из избранного" Cursor="Hand" MouseDown="Btn_RemoveFavorite_MouseDown">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="pack://siteoforigin:,,,/pics/delete.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Name="Btn_AddFavorite" HorizontalAlignment="Left" Height="23" Margin="11,179,0,0" VerticalAlignment="Top" Width="23" ToolTip="Добавить маршрут в избранное" Cursor="Hand" MouseDown="Btn_AddFavorite_MouseDown">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="pack://siteoforigin:,,,/pics/add.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Name="Btn_Search" HorizontalAlignment="Left" Height="24" Margin="305,178,0,0" VerticalAlignment="Top" Width="24" ToolTip="Поиск" Cursor="Hand" MouseDown="Btn_Search_MouseDown">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="pack://siteoforigin:,,,/pics/search.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Name="Btn_Clear" HorizontalAlignment="Left" Height="24" Margin="276,178,0,0" VerticalAlignment="Top" Width="24" ToolTip="Очистить" Cursor="Hand" MouseDown="Btn_Clear_MouseDown">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="pack://siteoforigin:,,,/pics/clear.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
         </Grid>
         <Grid Name="Grid_RouteInfo" HorizontalAlignment="Left" Height="611" VerticalAlignment="Top" Width="350" Visibility="Collapsed">
             <TextBox Name="TB_RouteInfo" Height="536" Margin="10,10,20,0" TextWrapping="Wrap" IsReadOnly="True" Text="" VerticalAlignment="Top"/>
