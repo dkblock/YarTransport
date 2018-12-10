@@ -18,15 +18,8 @@ namespace TransportLibrary
         {
             var item = (from t in _stations.Keys where t.StationName == station.StationName select t).FirstOrDefault();
 
-            if (item != null)
-            {
-                var newLocations = station.StationLocations.Except(item.StationLocations);
-
-                foreach (var location in newLocations)
-                    item.AddLocation(location);
-            }
-            else
-                _stations.Add(station, _stations.Count);
+            if (item == null)
+                _stations.Add(station, _stations.Count);             
         }
 
         public int Count

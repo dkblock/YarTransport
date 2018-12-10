@@ -19,12 +19,12 @@ namespace SearchWaySystem
             _htmlWorker = new HtmlWorker();
         }
 
-        public List<RouteInfo> GetRoutes(string pointOfDeparture, string pointOfDestination, bool isBusChecked, bool isTrolleyChecked, bool isTramChecked)
+        public List<RouteInfo> GetRoutes(string pointOfDeparture, string pointOfDestination, bool isBusChecked, bool isTrolleyChecked, bool isTramChecked, bool isMiniBusChecked)
         {
             var indexOfDeparture = _allStations[pointOfDeparture];
             var indexOfDestination = _allStations[pointOfDestination];
             var routesForSearch = _routeMatrix.GetRoutes(indexOfDeparture, indexOfDestination);
-            routesForSearch = RemoveNonSelectedTransport(routesForSearch, isBusChecked, isTrolleyChecked, isTramChecked);
+            routesForSearch = RemoveNonSelectedTransport(routesForSearch, isBusChecked, isTrolleyChecked, isTramChecked, isMiniBusChecked);
             var routesInfo = new List<RouteInfo>();
 
             for (int i = 0; i < routesForSearch.Count; i++)
@@ -51,7 +51,7 @@ namespace SearchWaySystem
             return routesInfo;
         }
 
-        private List<Route> RemoveNonSelectedTransport(List<Route> routesForSearch, bool isBusChecked, bool isTrolleyChecked, bool isTramChecked)
+        private List<Route> RemoveNonSelectedTransport(List<Route> routesForSearch, bool isBusChecked, bool isTrolleyChecked, bool isTramChecked, bool isMiniBusChecked)
         {
             var item = new List<Route>();
             item.AddRange(routesForSearch);
@@ -64,6 +64,9 @@ namespace SearchWaySystem
 
             if (!isTramChecked)
                 item.RemoveAll(x => x.TransportType == Transport.Tram);
+
+            if(!isMiniBusChecked)
+                item.RemoveAll(x => x.TransportType == Transport.Minibus);
 
             return item;
         }

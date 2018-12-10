@@ -91,7 +91,7 @@ namespace GMap
 
             if (_currentStationOnCurrentRoute < _namesOfStationsOnCurrentRoute.Count)
             {
-                var station = new Station(_namesOfStationsOnCurrentRoute[_currentStationOnCurrentRoute], new List<Location>() { new Location(lat, lng) });
+                var station = new Station(_namesOfStationsOnCurrentRoute[_currentStationOnCurrentRoute]);
                 _allStations.AddStation(station);
 
                 AddMarker(lat, lng, station);
@@ -154,7 +154,7 @@ namespace GMap
             }
 
             SetMarkers();
-            _stationsLoader.Load(url);
+            _stationsLoader.Load(url, transportType);
             _namesOfStationsOnCurrentRoute = _stationsLoader.StationsList;
             _lengthOfDirectRoute = _stationsLoader.CountOfStationsOnDirectRoute;
 
@@ -169,8 +169,8 @@ namespace GMap
             {
                 var station = _allStations.GetStation(i);
 
-                foreach (var location in station.StationLocations)
-                    AddMarker(location.Latitude, location.Longitude, station);
+                //foreach (var location in station.StationLocations)
+                //    AddMarker(location.Latitude, location.Longitude, station);
             }
         }
 

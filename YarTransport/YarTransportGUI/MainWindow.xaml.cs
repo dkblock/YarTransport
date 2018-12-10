@@ -120,28 +120,12 @@ namespace YarTransportGUI
             Popup_StationsOfDestination.IsOpen = false;
         }
 
-        private void Btn_Search_Click(object sender, RoutedEventArgs e)
-        {
-            var stationOfDeparture = TB_PointOfDeparture.Text;
-            var stationOfDestination = TB_PointOfDestination.Text;
-
-            if (stationOfDeparture.Length > 0 && stationOfDestination.Length > 0)
-            {
-                var isBusChecked = CB_Bus.IsChecked ?? false;
-                var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
-                var isTramChecked = CB_Tram.IsChecked ?? false;
-
-                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked);
-                DisplayRoutes(_routes);
-            }
-        }
-
         private void DisplayRoutes(List<RouteInfo> routes)
         {
             LB_Routes.Items.Clear();
 
             foreach (var route in routes)
-                LB_Routes.Items.Add($"{route.RouteType}\t\t\t\t{route.ArrivalTime.ToString()}");
+                LB_Routes.Items.Add($"{route.ToString()}");
         }
 
         private void LB_Routes_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -169,8 +153,9 @@ namespace YarTransportGUI
                 var isBusChecked = CB_Bus.IsChecked ?? false;
                 var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
                 var isTramChecked = CB_Tram.IsChecked ?? false;
+                var isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
 
-                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked);
+                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked, isMiniBusChecked);
                 DisplayRoutes(_routes);
             }
         }

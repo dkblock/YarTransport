@@ -9,7 +9,7 @@ namespace RoutesCreator
         public List<string> StationsList { get; private set; }
         public int CountOfStationsOnDirectRoute { get; private set; }
 
-        public void Load(string url)
+        public void Load(string url, int transportType)
         {
             StationsList = new List<string>();
 
@@ -25,7 +25,11 @@ namespace RoutesCreator
                 StationsList.Add(station.InnerText);
 
             var table = doc.DocumentNode.SelectNodes("//table//tbody//tr//td");
-            CountOfStationsOnDirectRoute = int.Parse(table[10].InnerText);
+
+            if (transportType != 4)
+                CountOfStationsOnDirectRoute = int.Parse(table[1].InnerText);
+            else
+                CountOfStationsOnDirectRoute = int.Parse(table[10].InnerText);
         }
     }
 }

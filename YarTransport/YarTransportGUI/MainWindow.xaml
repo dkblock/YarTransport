@@ -19,21 +19,22 @@
                 <StackPanel>
                     <ListBox Name="LB_StationsOfDestination" PreviewMouseDown="LB_StationsOfDestination_PreviewMouseDown"/>
                 </StackPanel>
-            </Popup>            
+            </Popup>
             <ListBox Name="LB_Routes" Margin="11,208,11,20" PreviewMouseDoubleClick="LB_Routes_PreviewMouseDoubleClick"/>
             <Ellipse Fill="#FF4296EA" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" VerticalAlignment="Top" Width="23"/>
             <Ellipse Fill="#FFFF3333" HorizontalAlignment="Left" Height="23" Margin="10,123,0,0" VerticalAlignment="Top" Width="23"/>
-            <GroupBox Header="Транспорт" HorizontalAlignment="Left" Height="86" Margin="11,10,0,0" VerticalAlignment="Top" Width="100">
-                <Grid HorizontalAlignment="Left" Height="86" Margin="0,-10,-2,-12" VerticalAlignment="Top" Width="90">
+            <GroupBox Header="Транспорт" HorizontalAlignment="Left" Height="108" Margin="11,10,0,0" VerticalAlignment="Top" Width="100">
+                <Grid HorizontalAlignment="Left" Height="98" Margin="0,-10,-2,-2" VerticalAlignment="Top" Width="90">
                     <CheckBox x:Name="CB_Bus" Content="Автобус" HorizontalAlignment="Left" Margin="0,18,0,0" VerticalAlignment="Top" IsChecked="True"/>
                     <CheckBox x:Name="CB_Trolley" Content="Троллейбус" HorizontalAlignment="Left" Margin="0,38,0,0" VerticalAlignment="Top" IsChecked="True"/>
                     <CheckBox x:Name="CB_Tram" Content="Трамвай" HorizontalAlignment="Left" Margin="0,58,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <CheckBox Name="CB_MiniBus" Content="Маршрутка" HorizontalAlignment="Left" Margin="0,78,0,0" VerticalAlignment="Top" IsChecked="True"/>
                 </Grid>
             </GroupBox>
             <Label Content="A" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,123,0,0" VerticalAlignment="Top" Height="23" Width="23" FontFamily="Arial" Foreground="White" FontWeight="Bold"/>
             <Label Content="B" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,151,0,0" VerticalAlignment="Top" Height="23" Width="23" FontFamily="Arial" Foreground="White" FontWeight="Bold"/>
-            <Expander Header="     Избранное" HorizontalAlignment="Left" Height="86" Margin="200,10,0,0" VerticalAlignment="Top" Width="129" IsExpanded="False">
-                <ListBox Name="LB_Favorite" HorizontalAlignment="Left" Height="63" Width="129" Margin="0,0,-2,0" PreviewMouseDoubleClick="LB_Favorite_PreviewMouseDoubleClick"/>
+            <Expander Header="     Избранное" HorizontalAlignment="Left" Height="108" Margin="200,10,0,0" VerticalAlignment="Top" Width="129" IsExpanded="False">
+                <ListBox Name="LB_Favorite" HorizontalAlignment="Left" Height="81" Width="129" Margin="0,0,-2,0" PreviewMouseDoubleClick="LB_Favorite_PreviewMouseDoubleClick"/>
             </Expander>
             <Rectangle Name="Btn_RemoveFavorite" HorizontalAlignment="Left" Height="23" Margin="39,179,0,0" VerticalAlignment="Top" Width="23" ToolTip="Удалить маршрут из избранного" Cursor="Hand" MouseDown="Btn_RemoveFavorite_MouseDown">
                 <Rectangle.Fill>

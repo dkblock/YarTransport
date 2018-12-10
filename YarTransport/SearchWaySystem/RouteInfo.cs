@@ -23,6 +23,11 @@ namespace SearchWaySystem
         {
             return (from t in Schedule where t.StationName == pointOfDeparture select t.Time).FirstOrDefault();
         }
+
+        public override string ToString()
+        {
+            return $"{ArrivalTime.ToString()}  {RouteType}";
+        }
     }
 
     public class ScheduleNode
