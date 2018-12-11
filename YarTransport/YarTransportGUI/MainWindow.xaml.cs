@@ -137,18 +137,29 @@ namespace YarTransportGUI
 
             TB_RouteInfo.Clear();
             TB_RouteInfo.AppendText($"{route.RouteType}\n");
-            TB_RouteInfo.AppendText($"{route.TransportModel}\n\n");
 
-            foreach (var node in route.Schedule)
-                TB_RouteInfo.AppendText($"{node.ToString()}\n");
+            if (route.TransportModel != "Unknown")
+            {
+                TB_RouteInfo.AppendText($"{route.TransportModel}\n\n");
+
+                foreach (var node in route.Schedule)
+                    TB_RouteInfo.AppendText($"{node.ToString()}\n");
+            }
+            else
+            {
+                TB_RouteInfo.AppendText($"\n{route.Schedule[0].ToString()}\n\n");
+                TB_RouteInfo.AppendText($"Подробная информация о маршруте будет доступна по прибытии транспорта на конечную остановку");
+            }
         }
 
         private void Btn_Search_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            LB_Routes.Items.Clear();
+
             var stationOfDeparture = TB_PointOfDeparture.Text;
             var stationOfDestination = TB_PointOfDestination.Text;
 
-            if (stationOfDeparture.Length > 0 && stationOfDestination.Length > 0)
+            if (_stations.Contains(stationOfDeparture) && _stations.Contains(stationOfDestination))
             {
                 var isBusChecked = CB_Bus.IsChecked ?? false;
                 var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
@@ -168,7 +179,7 @@ namespace YarTransportGUI
             if (sw.ShowDialog() == true)
                 sw.Show();
 
-            if (sw.RouteName != "")
+            if (sw.RouteName != "" && sw.RouteName!= null)
             {
                 var routeName = sw.RouteName;
                 _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);

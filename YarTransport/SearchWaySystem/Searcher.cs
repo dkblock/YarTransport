@@ -34,6 +34,7 @@ namespace SearchWaySystem
                 bool searchOnDirectRoute = GetRouteDirection(pointOfDeparture, pointOfDestination, directRoute);
 
                 var nodesForSearch = _htmlWorker.GetNodesForSearch(route, searchOnDirectRoute);
+                var lastRoutesCount = routesInfo.Count;
 
                 foreach (var node in nodesForSearch)
                 {
@@ -41,8 +42,16 @@ namespace SearchWaySystem
                     var transportModel = _htmlWorker.GetTransportModel();
                     var indexOfDepartureStation = (from t in schedule where t.StationName == pointOfDeparture select t).FirstOrDefault();
 
-                    if(indexOfDepartureStation!=null)
+                    if (indexOfDepartureStation != null)
                         routesInfo.Add(new RouteInfo(route.ToString(), transportModel, schedule, pointOfDeparture));
+                }
+
+                if (routesInfo.Count == lastRoutesCount && route.TransportType != Transport.Minibus)
+                {
+                    var arrivalTime = _htmlWorker.GetArrivalTime(_allRoutes, route, searchOnDirectRoute, pointOfDeparture);
+
+                    if (arrivalTime != null)
+                        routesInfo.Add(new RouteInfo(route.ToString(), arrivalTime, pointOfDeparture));
                 }
             }
 

@@ -19,6 +19,14 @@ namespace SearchWaySystem
             ArrivalTime = GetArrivalTime(pointOfDeparture);
         }
 
+        public RouteInfo(string route, RouteTime arrivalTime, string pointOfDeparture)
+        {
+            RouteType = route;
+            TransportModel = "Unknown";
+            ArrivalTime = arrivalTime;
+            Schedule = new List<ScheduleNode>() { new ScheduleNode(pointOfDeparture, arrivalTime) };
+        }
+
         private RouteTime GetArrivalTime(string pointOfDeparture)
         {
             return (from t in Schedule where t.StationName == pointOfDeparture select t.Time).FirstOrDefault();
@@ -39,6 +47,12 @@ namespace SearchWaySystem
         {
             StationName = stationName;
             Time = new RouteTime(time);
+        }
+
+        public ScheduleNode(string stationName, RouteTime time)
+        {
+            StationName = stationName;
+            Time = time;
         }
 
         public override string ToString()

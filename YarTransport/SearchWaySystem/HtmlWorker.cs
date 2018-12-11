@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using TransportLibrary;
 
@@ -24,6 +26,7 @@ namespace SearchWaySystem
             var url = $"http://www.ot76.ru/mob/getroutestr.php?vt={GetTransportType(route)}&nmar={route.RouteNumber}";
             var doc = _webget.Load(url);
             var tableNodes = doc.DocumentNode.SelectNodes("//tr//td");
+            var nodesForSearch = new List<HtmlNode>();
 
             if (tableNodes != null)
             {
@@ -36,20 +39,20 @@ namespace SearchWaySystem
                 if (searchOnDirectRoute)
                 {
                     if (reverseRouteTableStart != -1)
-                        return (from t in tableNodes where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) < reverseRouteTableStart select t).ToList();
+                        nodesForSearch = (from t in tableNodes where t.InnerText.Contains("Расписание")
+                                          && tableNodes.IndexOf(t) < reverseRouteTableStart select t).ToList();
                     else
-                        return (from t in tableNodes where t.InnerText.Contains("Расписание") select t).ToList();
+                        nodesForSearch = (from t in tableNodes where t.InnerText.Contains("Расписание") select t).ToList();
                 }
                 else
                 {
                     if (reverseRouteTableStart != -1)
-                        return (from t in tableNodes where t.InnerText.Contains("Расписание") && tableNodes.IndexOf(t) > reverseRouteTableStart select t).ToList();
-                    else
-                        return new List<HtmlNode>();
+                        nodesForSearch = (from t in tableNodes where t.InnerText.Contains("Расписание")
+                                          && tableNodes.IndexOf(t) > reverseRouteTableStart select t).ToList();
                 }
             }
-            else
-                return new List<HtmlNode>();
+
+            return nodesForSearch;
         }
 
         public List<ScheduleNode> GetSchedule(HtmlNode node)
@@ -67,6 +70,81 @@ namespace SearchWaySystem
                 schedule.Add(new ScheduleNode(scheduleItems[i].InnerText, scheduleItems[i + 1].InnerText));
 
             return schedule;
+        }
+
+        public RouteTime GetArrivalTime(AllRoutes allRoutes, Route route, bool searchOnDirectRoute, string stationOfDeparture)
+        {
+            var url = $"http://yartr.ru/config.php?vt={GetTransportType(route)}&nmar={route.RouteNumber}";
+            var doc = _webget.Load(url);
+            var tableNodes = doc.DocumentNode.SelectNodes("//a").ToList();
+            var reverseRouteTableStart = allRoutes[route].DirectRoute.Count;
+
+            tableNodes.RemoveAll(x => WebUtility.HtmlDecode(x.InnerText) == "назад");
+
+            if (tableNodes.Count > 0)
+            {
+                if (searchOnDirectRoute)
+                {
+                    tableNodes.RemoveRange(reverseRouteTableStart, allRoutes[route].ReverseRoute.Count);
+                    return ParseArrivalTime(route, stationOfDeparture, out url, out doc, ref tableNodes);
+                }
+                else
+                {
+                    tableNodes.RemoveRange(0, allRoutes[route].DirectRoute.Count);
+                    return ParseArrivalTime(route, stationOfDeparture, out url, out doc, ref tableNodes);
+                }
+            }
+            else
+                return null;
+        }
+
+        private RouteTime ParseArrivalTime(Route route, string stationOfDeparture, out string url, out HtmlDocument doc, ref List<HtmlNode> tableNodes)
+        {
+            var node = (from t in tableNodes where WebUtility.HtmlDecode(t.InnerText).Contains(stationOfDeparture) select t).First();
+            var page = node.Attributes["href"].Value.Replace("amp;", "");
+
+            url = $"http://yartr.ru/{page}";
+            doc = _webget.Load(url);
+            tableNodes = doc.DocumentNode.SelectNodes("//body").ToList();
+
+            var tableStrings = ReplaceTrashSymbols(WebUtility.HtmlDecode(tableNodes[0].InnerText), stationOfDeparture).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var routeToFind = GetStringToFind(route);
+
+            for (int i = 0; i < tableNodes.Count; i++)
+            {
+                var item = $"{tableStrings[i]} {tableStrings[i + 1]}";
+
+                if (item == routeToFind && tableStrings[i + 2] != "рейсов")
+                    return new RouteTime(tableStrings[i + 2].Replace('.', ':'));
+            }
+
+            return null;
+        }
+
+        private string GetStringToFind(Route route)
+        {
+            switch(route.TransportType)
+            {
+                case Transport.Bus:
+                    var routeNumber = route.ToString().Replace("Автобус № ", "");
+                    return $"Ав {routeNumber}:";
+                case Transport.Trolley:
+                    return $"Тб {route.RouteNumber}:";
+                case Transport.Tram:
+                    return $"Тб {route.RouteNumber}:";
+                default:
+                    return "";
+            }
+        }
+
+        private string ReplaceTrashSymbols(string text, string stationOfDeparture)
+        {
+            text = text.Replace("назад", "");
+            text = text.Replace("Время прохождения", "");
+            text = text.Replace($"Отправление от {stationOfDeparture}", "");
+            text = text.Replace("Табло", "");
+
+            return text;
         }
 
         public string GetTransportModel()
