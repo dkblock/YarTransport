@@ -17,7 +17,7 @@ namespace SearchWaySystem
         {
             _webget = new HtmlWeb()
             {
-                OverrideEncoding = Encoding.Default
+                OverrideEncoding = Encoding.GetEncoding("windows-1251")
             };
         }
 
@@ -127,7 +127,7 @@ namespace SearchWaySystem
             {
                 case Transport.Bus:
                     var routeNumber = route.ToString().Replace("Автобус № ", "");
-                    return $"Ав {routeNumber}:";
+                    return $"Ав {routeNumber.Replace("с","c")}:";
                 case Transport.Trolley:
                     return $"Тб {route.RouteNumber}:";
                 case Transport.Tram:

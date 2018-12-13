@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace SearchWaySystem
 {
@@ -25,6 +26,28 @@ namespace SearchWaySystem
             TransportModel = "Unknown";
             ArrivalTime = arrivalTime;
             Schedule = new List<ScheduleNode>() { new ScheduleNode(pointOfDeparture, arrivalTime) };
+        }
+
+        public string GetRouteInfo()
+        {
+            StringBuilder text = new StringBuilder();
+
+            text.Append($"{RouteType}\n");
+
+            if (TransportModel != "Unknown")
+            {
+                text.Append($"{TransportModel}\n\n");
+
+                foreach (var node in Schedule)
+                    text.Append($"{node.ToString()}\n");
+            }
+            else
+            {
+                text.Append($"\n{Schedule[0].ToString()}\n\n");
+                text.Append($"Подробная информация о маршруте будет доступна по прибытии транспорта на конечную остановку");
+            }
+
+            return text.ToString();
         }
 
         private RouteTime GetArrivalTime(string pointOfDeparture)

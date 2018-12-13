@@ -120,6 +120,35 @@ namespace YarTransportGUI
             Popup_StationsOfDestination.IsOpen = false;
         }
 
+        private void Btn_Search_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LB_Routes.Items.Clear();
+
+            var stationOfDeparture = TB_PointOfDeparture.Text;
+            var stationOfDestination = TB_PointOfDestination.Text;
+
+            if (_stations.Contains(stationOfDeparture) && _stations.Contains(stationOfDestination))
+            {
+                var isBusChecked = CB_Bus.IsChecked ?? false;
+                var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
+                var isTramChecked = CB_Tram.IsChecked ?? false;
+                var isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
+
+                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked, isMiniBusChecked);
+
+                if (_routes != null)
+                    DisplayRoutes(_routes);
+                else
+                {
+                    var ew = new ExceptionWindow("Не существует транспорта, следующего по заданному маршруту!");
+                    ew.Owner = this;
+
+                    if (ew.ShowDialog() == true)
+                        ew.Show();
+                }
+            }
+        }
+
         private void DisplayRoutes(List<RouteInfo> routes)
         {
             LB_Routes.Items.Clear();
@@ -136,39 +165,7 @@ namespace YarTransportGUI
             Grid_RouteInfo.Visibility = Visibility.Visible;
 
             TB_RouteInfo.Clear();
-            TB_RouteInfo.AppendText($"{route.RouteType}\n");
-
-            if (route.TransportModel != "Unknown")
-            {
-                TB_RouteInfo.AppendText($"{route.TransportModel}\n\n");
-
-                foreach (var node in route.Schedule)
-                    TB_RouteInfo.AppendText($"{node.ToString()}\n");
-            }
-            else
-            {
-                TB_RouteInfo.AppendText($"\n{route.Schedule[0].ToString()}\n\n");
-                TB_RouteInfo.AppendText($"Подробная информация о маршруте будет доступна по прибытии транспорта на конечную остановку");
-            }
-        }
-
-        private void Btn_Search_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            LB_Routes.Items.Clear();
-
-            var stationOfDeparture = TB_PointOfDeparture.Text;
-            var stationOfDestination = TB_PointOfDestination.Text;
-
-            if (_stations.Contains(stationOfDeparture) && _stations.Contains(stationOfDestination))
-            {
-                var isBusChecked = CB_Bus.IsChecked ?? false;
-                var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
-                var isTramChecked = CB_Tram.IsChecked ?? false;
-                var isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
-
-                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked, isMiniBusChecked);
-                DisplayRoutes(_routes);
-            }
+            TB_RouteInfo.AppendText(route.GetRouteInfo());
         }
 
         private void Btn_AddFavorite_MouseDown(object sender, MouseButtonEventArgs e)
