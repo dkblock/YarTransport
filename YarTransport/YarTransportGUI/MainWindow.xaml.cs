@@ -24,7 +24,6 @@ namespace YarTransportGUI
 
             _searcher = InitSearcher();
             InitFavoriteRoutes();
-            InitStations();
             InitPopups(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
             InitPopups(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
         }
@@ -44,6 +43,13 @@ namespace YarTransportGUI
             using (var fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
             {
                 allStations = (AllStations)formatter.Deserialize(fs);
+
+                _stations = new List<string>();
+
+                for (int i = 0; i < allStations.Count; i++)
+                    _stations.Add(allStations.GetStation(i).StationName);
+
+                _stations.Sort();
             }
 
             using (var fs = new FileStream("routematrix.dat", FileMode.OpenOrCreate))
@@ -90,20 +96,6 @@ namespace YarTransportGUI
             {
                 popup.IsOpen = false;
             };
-        }
-
-        private void InitStations()
-        {
-            var formatter = new BinaryFormatter();
-
-            using (FileStream fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
-            {
-                var allStations = (AllStations)formatter.Deserialize(fs);
-                _stations = new List<string>();
-
-                for (int i = 0; i < allStations.Count; i++)
-                    _stations.Add(allStations.GetStation(i).StationName);
-            }
         }
 
         private void LB_StationsOfDeparture_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -153,8 +145,19 @@ namespace YarTransportGUI
         {
             LB_Routes.Items.Clear();
 
-            foreach (var route in routes)
-                LB_Routes.Items.Add($"{route.ToString()}");
+            if (routes.Count > 0)
+            {
+                foreach (var route in routes)
+                    LB_Routes.Items.Add($"{route.ToString()}");
+            }
+            else
+            {
+                var ew = new ExceptionWindow("В данный момент на линии нет транспорта, следующего по заданному маршруту!");
+                ew.Owner = this;
+
+                if (ew.ShowDialog() == true)
+                    ew.Show();
+            }
         }
 
         private void LB_Routes_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
