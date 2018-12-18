@@ -182,11 +182,24 @@ namespace YarTransportGUI
             if (sw.RouteName != "" && sw.RouteName!= null)
             {
                 var routeName = sw.RouteName;
-                _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
-                LB_Favorite.Items.Add($"{routeName}");
-                LB_Favorite.Visibility = Visibility.Visible;
+                var item = (from f in _favoriteRoutes.FavoriteRoutesList where f.RouteName == routeName select f).FirstOrDefault();
 
-                SerializeFavoriteRoutes();
+                if (item == null)
+                {
+                    _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
+                    LB_Favorite.Items.Add($"{routeName}");
+                    LB_Favorite.Visibility = Visibility.Visible;
+
+                    SerializeFavoriteRoutes();
+                }
+                else
+                {
+                    var ew = new ExceptionWindow("Маршрут с таким названием уже существует!");
+                    ew.Owner = this;
+
+                    if (ew.ShowDialog() == true)
+                        ew.Show();
+                }
             }
         }
 
