@@ -176,7 +176,7 @@ namespace YarTransportAndroidGUI
             await Task.Run(() => GetRoutesAsync());
             var adapter = new TextViewRouteInfoAdapter(this, list);
             text.Adapter = adapter;
-            if (list.Count==0)
+            if (list==null||list.Count==0)
                 text.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string>() { "Не существует транспорта, следующего по заданному маршруту" });
         }
 
