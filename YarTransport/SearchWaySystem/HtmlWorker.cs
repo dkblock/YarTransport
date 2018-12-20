@@ -17,7 +17,8 @@ namespace SearchWaySystem
         {
             _webget = new HtmlWeb()
             {
-                OverrideEncoding = Encoding.Default
+                //OverrideEncoding = Encoding.Default
+                OverrideEncoding = Encoding.GetEncoding("windows-1251")
             };
         }
 

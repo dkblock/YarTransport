@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<android.support.v7.widget.Toolbar
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?android:actionBarSize"
+		android:background="@color/colorPrimary"/>
+
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<SearchableSpinner.Droid.Controls.SpinnerSearch
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/StartSpinner"
+		/>
+		<SearchableSpinner.Droid.Controls.SpinnerSearch
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/EndSpinner"
+		/>
+		<LinearLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="65dp"
+			android:paddingTop="10dp"
+			android:paddingBottom="10dp">
+		<Button
+			android:text="Найти транспорт"
+			android:layout_width="200dp"
+			android:layout_height="36dp"
+			android:layout_gravity="center"
+			android:textColor="@color/white"
+			android:background="@color/colorPrimary"
+			android:id="@+id/SearchButton"/>
+		<ImageButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/NotContains"
+			android:background="@null"	
+			android:paddingBottom="3dp"
+			android:paddingLeft="30dp"
+			android:gravity="center"
+			android:id="@+id/FavouritiesButton"/>
+		</LinearLayout>
+		<ListView
+			android:minWidth="25px"
+			android:minHeight="25px"
+			android:paddingTop="10sp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/Schedule"
+		/>
+	</LinearLayout>
+</LinearLayout>
