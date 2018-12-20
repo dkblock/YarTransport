@@ -26,7 +26,7 @@ namespace YarTransportAndroidGUI
 
         public override int Count
         {
-            get { return _items.Count; }
+            get { if (_items != null) return _items.Count; else return 0; }
         }
 
         public override long GetItemId(int position)

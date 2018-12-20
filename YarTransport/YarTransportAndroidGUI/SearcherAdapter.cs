@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-
+using System.Threading;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -32,10 +32,12 @@ namespace YarTransportAndroidGUI
             if (_allStations == null)
             {
                 var formatter = new BinaryFormatter();
-                _allRoutes = (AllRoutes)formatter.Deserialize(AllRoutesStream);
-                _allStations = (AllStations)formatter.Deserialize(AllStationsStream);
-                _routeMatrix = (RouteMatrix)formatter.Deserialize(RouteMatrixStream);
-
+                Thread potok1 = new Thread(delegate() { _allRoutes = (AllRoutes)formatter.Deserialize(AllRoutesStream); }); 
+                potok1.Start();
+                Thread potok2 = new Thread(delegate () { _allStations = (AllStations)formatter.Deserialize(AllStationsStream); });
+                potok2.Start();
+                Thread potok3 = new Thread(delegate () { _routeMatrix = (RouteMatrix)formatter.Deserialize(RouteMatrixStream); });
+                potok3.Start();
 
                 var backingFile = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "favorites.dat");
 
@@ -49,7 +51,10 @@ namespace YarTransportAndroidGUI
                     _favoriteRoutes = (FavoriteRoutes)formatter.Deserialize(reader);
                 }
 
-                
+               while(potok1.IsAlive||potok2.IsAlive||potok3.IsAlive)
+                {
+                    continue;
+                }
             }
         }
 

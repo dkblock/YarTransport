@@ -46,12 +46,12 @@ namespace YarTransportAndroidGUI
 
             startSpinner = FindViewById<SpinnerSearch>(Resource.Id.StartSpinner);
             startSpinner.DefaultText = "Откуда";
-
             startSpinner.ItemSelected += Spinner_ItemSelected;
+            startSpinner.NothingSelected += StartSpinner_NothingSelected;
             endSpinner = FindViewById<SpinnerSearch>(Resource.Id.EndSpinner);
-            endSpinner.DefaultText = "Куда";           
+            endSpinner.DefaultText = "Куда";
             endSpinner.ItemSelected +=Spinner_ItemSelected;
-            
+            endSpinner.NothingSelected += EndSpinner_NothingSelected;
             if (SearcherAdapter.St != null)
             {
                 var m = SearcherAdapter.GetPoint();
@@ -78,6 +78,17 @@ namespace YarTransportAndroidGUI
             var btn = FindViewById<Button>(Resource.Id.SearchButton);
             btn.Click += FindTransport;
 
+        }
+
+        private void StartSpinner_NothingSelected(object sender, AdapterView.NothingSelectedEventArgs e)
+        {
+            startSpinner.DefaultText = "Откуда";
+        }
+
+        private void EndSpinner_NothingSelected(object sender, AdapterView.NothingSelectedEventArgs e)
+        {
+            endSpinner.DefaultText = "Куда";
+            startSpinner.SetSelection(0);
         }
 
         private void Spinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
@@ -122,17 +133,28 @@ namespace YarTransportAndroidGUI
         {
             s = FindViewById<SpinnerSearch>(Resource.Id.StartSpinner).SelectedItem.ToString();
             s1 = FindViewById<SpinnerSearch>(Resource.Id.EndSpinner).SelectedItem.ToString();
+            bool isSelected;
+            if (s.Equals(FindViewById<SpinnerSearch>(Resource.Id.StartSpinner).DefaultText) || 
+                s1.Equals(FindViewById<SpinnerSearch>(Resource.Id.EndSpinner).DefaultText))
+                isSelected = false;
+            else
+                isSelected = true;
             var cm = ((ConnectivityManager)GetSystemService(Application.ConnectivityService)).ActiveNetworkInfo;
             bool isConnected;
             if (cm == null)
                 isConnected = false;
             else
                 isConnected= cm.IsConnected;
-            if (isConnected)
-            ShowInfoAsync();
+            if (isConnected&&isSelected)
+            {
+                ShowInfoAsync();
+            }
             else
             {
+                if (!isConnected)
                 Toast.MakeText(this, "Нет подключения к интернету", ToastLength.Short).Show();
+                else
+                    Toast.MakeText(this, "Чтобы начать поиск, выберите остановки", ToastLength.Short).Show();
             }
         }
 
@@ -154,6 +176,8 @@ namespace YarTransportAndroidGUI
             await Task.Run(() => GetRoutesAsync());
             var adapter = new TextViewRouteInfoAdapter(this, list);
             text.Adapter = adapter;
+            if (list.Count==0)
+                text.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string>() { "Не существует транспорта, следующего по заданному маршруту" });
         }
 
         public string GetInfo(int position)
