@@ -107,7 +107,7 @@ namespace SearchWaySystem
             doc = _webget.Load(url);
             tableNodes = doc.DocumentNode.SelectNodes("//body").ToList();
 
-            var tableStrings = ReplaceTrashSymbols(WebUtility.HtmlDecode(tableNodes[0].InnerText), stationOfDeparture).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var tableStrings = ReplaceUnnecessarySymbols(WebUtility.HtmlDecode(tableNodes[0].InnerText), stationOfDeparture).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var routeToFind = GetStringToFind(route);
 
             for (int i = 0; i < tableNodes.Count; i++)
@@ -137,7 +137,7 @@ namespace SearchWaySystem
             }
         }
 
-        private string ReplaceTrashSymbols(string text, string stationOfDeparture)
+        private string ReplaceUnnecessarySymbols(string text, string stationOfDeparture)
         {
             text = text.Replace("назад", "");
             text = text.Replace("Время прохождения", "");

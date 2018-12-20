@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,11 @@ namespace YarTransportGUI
         private List<RouteInfo> _routes;
         private FavoriteRoutes _favoriteRoutes;
 
+        private bool _isBusChecked;
+        private bool _isTrolleyChecked;
+        private bool _isTramChecked;
+        private bool _isMiniBusChecked;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -26,7 +32,7 @@ namespace YarTransportGUI
             InitFavoriteRoutes();
             InitPopups(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
             InitPopups(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
-        }
+        }     
 
         private Searcher InitSearcher()
         {
@@ -119,26 +125,27 @@ namespace YarTransportGUI
             var stationOfDeparture = TB_PointOfDeparture.Text;
             var stationOfDestination = TB_PointOfDestination.Text;
 
-            if (_stations.Contains(stationOfDeparture) && _stations.Contains(stationOfDestination))
+            if (IsConnectedToInternet())
             {
-                var isBusChecked = CB_Bus.IsChecked ?? false;
-                var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
-                var isTramChecked = CB_Tram.IsChecked ?? false;
-                var isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
-
-                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked, isMiniBusChecked);
-
-                if (_routes != null)
-                    DisplayRoutes(_routes);
-                else
+                if (_stations.Contains(stationOfDeparture) && _stations.Contains(stationOfDestination))
                 {
-                    var ew = new ExceptionWindow("Не существует транспорта, следующего по заданному маршруту!");
-                    ew.Owner = this;
+                    _isBusChecked = CB_Bus.IsChecked ?? false;
+                    _isTrolleyChecked = CB_Trolley.IsChecked ?? false;
+                    _isTramChecked = CB_Tram.IsChecked ?? false;
+                    _isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
 
-                    if (ew.ShowDialog() == true)
-                        ew.Show();
+                    _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, _isBusChecked, _isTrolleyChecked, _isTramChecked, _isMiniBusChecked);
+
+                    if (_routes != null)
+                        DisplayRoutes(_routes);
+                    else
+                        CallExceptionWindow("Не существует транспорта, следующего по заданному маршруту!");
                 }
+                else
+                    CallExceptionWindow("Не существует остановки (остановок) с таким названием. Проверьте параметры поиска!");
             }
+            else
+                CallExceptionWindow("Проверьте подключение к сети Интернет!");
         }
 
         private void DisplayRoutes(List<RouteInfo> routes)
@@ -152,11 +159,10 @@ namespace YarTransportGUI
             }
             else
             {
-                var ew = new ExceptionWindow("В данный момент на линии нет транспорта, следующего по заданному маршруту!");
-                ew.Owner = this;
-
-                if (ew.ShowDialog() == true)
-                    ew.Show();
+                if (!_isBusChecked && !_isMiniBusChecked && !_isTramChecked && !_isTrolleyChecked)
+                    CallExceptionWindow("Не выбран ни один вид транспорта для поиска!");
+                else
+                    CallExceptionWindow("В данный момент на линии нет транспорта, следующего по заданному маршруту!");
             }
         }
 
@@ -193,13 +199,7 @@ namespace YarTransportGUI
                     SerializeFavoriteRoutes();
                 }
                 else
-                {
-                    var ew = new ExceptionWindow("Маршрут с таким названием уже существует!");
-                    ew.Owner = this;
-
-                    if (ew.ShowDialog() == true)
-                        ew.Show();
-                }
+                    CallExceptionWindow("Маршрут с таким названием уже существует!");
             }
         }
 
@@ -243,6 +243,32 @@ namespace YarTransportGUI
         {
             Grid_RouteInfo.Visibility = Visibility.Collapsed;
             Grid_MainWindow.Visibility = Visibility.Visible;
+        }
+
+        private void CallExceptionWindow(string message)
+        {
+            var ew = new ExceptionWindow(message);
+            ew.Owner = this;
+
+            if (ew.ShowDialog() == true)
+                ew.Show();
+        }
+
+        private bool IsConnectedToInternet()
+        {
+            IPStatus status = IPStatus.Unknown;
+
+            try
+            {
+                status = new Ping().Send("ot76.ru").Status;
+            }
+            catch { }
+
+            if (status == IPStatus.Success)
+                return true;
+            else
+                return false; 
+    
         }
     }
 }
