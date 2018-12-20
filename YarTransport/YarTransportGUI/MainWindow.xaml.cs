@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,16 +19,20 @@ namespace YarTransportGUI
         private List<RouteInfo> _routes;
         private FavoriteRoutes _favoriteRoutes;
 
+        private bool _isBusChecked;
+        private bool _isTrolleyChecked;
+        private bool _isTramChecked;
+        private bool _isMiniBusChecked;
+
         public MainWindow()
         {
             InitializeComponent();
 
             _searcher = InitSearcher();
             InitFavoriteRoutes();
-            InitStations();
             InitPopups(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
             InitPopups(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
-        }
+        }     
 
         private Searcher InitSearcher()
         {
@@ -44,6 +49,13 @@ namespace YarTransportGUI
             using (var fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
             {
                 allStations = (AllStations)formatter.Deserialize(fs);
+
+                _stations = new List<string>();
+
+                for (int i = 0; i < allStations.Count; i++)
+                    _stations.Add(allStations.GetStation(i).StationName);
+
+                _stations.Sort();
             }
 
             using (var fs = new FileStream("routematrix.dat", FileMode.OpenOrCreate))
@@ -92,20 +104,6 @@ namespace YarTransportGUI
             };
         }
 
-        private void InitStations()
-        {
-            var formatter = new BinaryFormatter();
-
-            using (FileStream fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
-            {
-                var allStations = (AllStations)formatter.Deserialize(fs);
-                _stations = new List<string>();
-
-                for (int i = 0; i < allStations.Count; i++)
-                    _stations.Add(allStations.GetStation(i).StationName);
-            }
-        }
-
         private void LB_StationsOfDeparture_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             var item = ItemsControl.ContainerFromElement(LB_StationsOfDeparture, e.OriginalSource as DependencyObject) as ListBoxItem;
@@ -120,12 +118,52 @@ namespace YarTransportGUI
             Popup_StationsOfDestination.IsOpen = false;
         }
 
+        private void Btn_Search_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LB_Routes.Items.Clear();
+
+            var stationOfDeparture = TB_PointOfDeparture.Text;
+            var stationOfDestination = TB_PointOfDestination.Text;
+
+            if (IsConnectedToInternet())
+            {
+                if (_stations.Contains(stationOfDeparture) && _stations.Contains(stationOfDestination))
+                {
+                    _isBusChecked = CB_Bus.IsChecked ?? false;
+                    _isTrolleyChecked = CB_Trolley.IsChecked ?? false;
+                    _isTramChecked = CB_Tram.IsChecked ?? false;
+                    _isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
+
+                    _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, _isBusChecked, _isTrolleyChecked, _isTramChecked, _isMiniBusChecked);
+
+                    if (_routes != null)
+                        DisplayRoutes(_routes);
+                    else
+                        CallExceptionWindow("Не существует транспорта, следующего по заданному маршруту!");
+                }
+                else
+                    CallExceptionWindow("Не существует остановки (остановок) с таким названием. Проверьте параметры поиска!");
+            }
+            else
+                CallExceptionWindow("Проверьте подключение к сети Интернет!");
+        }
+
         private void DisplayRoutes(List<RouteInfo> routes)
         {
             LB_Routes.Items.Clear();
 
-            foreach (var route in routes)
-                LB_Routes.Items.Add($"{route.ToString()}");
+            if (routes.Count > 0)
+            {
+                foreach (var route in routes)
+                    LB_Routes.Items.Add($"{route.ToString()}");
+            }
+            else
+            {
+                if (!_isBusChecked && !_isMiniBusChecked && !_isTramChecked && !_isTrolleyChecked)
+                    CallExceptionWindow("Не выбран ни один вид транспорта для поиска!");
+                else
+                    CallExceptionWindow("В данный момент на линии нет транспорта, следующего по заданному маршруту!");
+            }
         }
 
         private void LB_Routes_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -136,39 +174,7 @@ namespace YarTransportGUI
             Grid_RouteInfo.Visibility = Visibility.Visible;
 
             TB_RouteInfo.Clear();
-            TB_RouteInfo.AppendText($"{route.RouteType}\n");
-
-            if (route.TransportModel != "Unknown")
-            {
-                TB_RouteInfo.AppendText($"{route.TransportModel}\n\n");
-
-                foreach (var node in route.Schedule)
-                    TB_RouteInfo.AppendText($"{node.ToString()}\n");
-            }
-            else
-            {
-                TB_RouteInfo.AppendText($"\n{route.Schedule[0].ToString()}\n\n");
-                TB_RouteInfo.AppendText($"Подробная информация о маршруте будет доступна по прибытии транспорта на конечную остановку");
-            }
-        }
-
-        private void Btn_Search_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            LB_Routes.Items.Clear();
-
-            var stationOfDeparture = TB_PointOfDeparture.Text;
-            var stationOfDestination = TB_PointOfDestination.Text;
-
-            if (_stations.Contains(stationOfDeparture) && _stations.Contains(stationOfDestination))
-            {
-                var isBusChecked = CB_Bus.IsChecked ?? false;
-                var isTrolleyChecked = CB_Trolley.IsChecked ?? false;
-                var isTramChecked = CB_Tram.IsChecked ?? false;
-                var isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
-
-                _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, isBusChecked, isTrolleyChecked, isTramChecked, isMiniBusChecked);
-                DisplayRoutes(_routes);
-            }
+            TB_RouteInfo.AppendText(route.GetRouteInfo());
         }
 
         private void Btn_AddFavorite_MouseDown(object sender, MouseButtonEventArgs e)
@@ -182,11 +188,18 @@ namespace YarTransportGUI
             if (sw.RouteName != "" && sw.RouteName!= null)
             {
                 var routeName = sw.RouteName;
-                _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
-                LB_Favorite.Items.Add($"{routeName}");
-                LB_Favorite.Visibility = Visibility.Visible;
+                var item = (from f in _favoriteRoutes.FavoriteRoutesList where f.RouteName == routeName select f).FirstOrDefault();
 
-                SerializeFavoriteRoutes();
+                if (item == null)
+                {
+                    _favoriteRoutes.Add(routeName, TB_PointOfDeparture.Text, TB_PointOfDestination.Text);
+                    LB_Favorite.Items.Add($"{routeName}");
+                    LB_Favorite.Visibility = Visibility.Visible;
+
+                    SerializeFavoriteRoutes();
+                }
+                else
+                    CallExceptionWindow("Маршрут с таким названием уже существует!");
             }
         }
 
@@ -230,6 +243,32 @@ namespace YarTransportGUI
         {
             Grid_RouteInfo.Visibility = Visibility.Collapsed;
             Grid_MainWindow.Visibility = Visibility.Visible;
+        }
+
+        private void CallExceptionWindow(string message)
+        {
+            var ew = new ExceptionWindow(message);
+            ew.Owner = this;
+
+            if (ew.ShowDialog() == true)
+                ew.Show();
+        }
+
+        private bool IsConnectedToInternet()
+        {
+            IPStatus status = IPStatus.Unknown;
+
+            try
+            {
+                status = new Ping().Send("ot76.ru").Status;
+            }
+            catch { }
+
+            if (status == IPStatus.Success)
+                return true;
+            else
+                return false; 
+    
         }
     }
 }

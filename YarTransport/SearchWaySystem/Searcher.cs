@@ -24,6 +24,10 @@ namespace SearchWaySystem
             var indexOfDeparture = _allStations[pointOfDeparture];
             var indexOfDestination = _allStations[pointOfDestination];
             var routesForSearch = _routeMatrix.GetRoutes(indexOfDeparture, indexOfDestination);
+
+            if (routesForSearch.Count == 0)
+                return null;
+
             routesForSearch = RemoveNonSelectedTransport(routesForSearch, isBusChecked, isTrolleyChecked, isTramChecked, isMiniBusChecked);
             var routesInfo = new List<RouteInfo>();
 

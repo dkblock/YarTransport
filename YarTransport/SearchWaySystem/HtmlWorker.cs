@@ -17,7 +17,6 @@ namespace SearchWaySystem
         {
             _webget = new HtmlWeb()
             {
-                //OverrideEncoding = Encoding.Default
                 OverrideEncoding = Encoding.GetEncoding("windows-1251")
             };
         }
@@ -108,7 +107,7 @@ namespace SearchWaySystem
             doc = _webget.Load(url);
             tableNodes = doc.DocumentNode.SelectNodes("//body").ToList();
 
-            var tableStrings = ReplaceTrashSymbols(WebUtility.HtmlDecode(tableNodes[0].InnerText), stationOfDeparture).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var tableStrings = ReplaceUnnecessarySymbols(WebUtility.HtmlDecode(tableNodes[0].InnerText), stationOfDeparture).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var routeToFind = GetStringToFind(route);
 
             for (int i = 0; i < tableNodes.Count; i++)
@@ -128,7 +127,7 @@ namespace SearchWaySystem
             {
                 case Transport.Bus:
                     var routeNumber = route.ToString().Replace("Автобус № ", "");
-                    return $"Ав {routeNumber}:";
+                    return $"Ав {routeNumber.Replace("с","c")}:";
                 case Transport.Trolley:
                     return $"Тб {route.RouteNumber}:";
                 case Transport.Tram:
@@ -138,7 +137,7 @@ namespace SearchWaySystem
             }
         }
 
-        private string ReplaceTrashSymbols(string text, string stationOfDeparture)
+        private string ReplaceUnnecessarySymbols(string text, string stationOfDeparture)
         {
             text = text.Replace("назад", "");
             text = text.Replace("Время прохождения", "");
