@@ -45,7 +45,7 @@ namespace YarTransportAndroidGUI
             if (row == null)
                 row = LayoutInflater.FromContext(_context).Inflate(Resource.Layout.listview_row, null, false);
             TextView txtName = row.FindViewById<TextView>(Resource.Id.txtName);
-            txtName.Text = _items.FavoriteRoutesList[position].ToString();
+            txtName.Text = $"{_items.FavoriteRoutesList[position].PointOfDeparture} - {_items.FavoriteRoutesList[position].PointOfDestination}";
             return row;
         }
     }

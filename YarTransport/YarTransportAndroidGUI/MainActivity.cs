@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Android.Widget;
 using Android.Graphics;
 using Java.Lang;
+using Android.Net;
 
 namespace YarTransportAndroidGUI
 {
@@ -75,7 +76,7 @@ namespace YarTransportAndroidGUI
             text = FindViewById<ListView>(Resource.Id.Schedule);
             text.ItemClick += Text_ItemClick;
             var btn = FindViewById<Button>(Resource.Id.SearchButton);
-            btn.Click += NextPade;
+            btn.Click += FindTransport;
 
         }
 
@@ -117,11 +118,22 @@ namespace YarTransportAndroidGUI
             }
         }
 
-        private void NextPade(object sender, System.EventArgs e)
+        private void FindTransport(object sender, System.EventArgs e)
         {
             s = FindViewById<SpinnerSearch>(Resource.Id.StartSpinner).SelectedItem.ToString();
             s1 = FindViewById<SpinnerSearch>(Resource.Id.EndSpinner).SelectedItem.ToString();
+            var cm = ((ConnectivityManager)GetSystemService(Application.ConnectivityService)).ActiveNetworkInfo;
+            bool isConnected;
+            if (cm == null)
+                isConnected = false;
+            else
+                isConnected= cm.IsConnected;
+            if (isConnected)
             ShowInfoAsync();
+            else
+            {
+                Toast.MakeText(this, "Нет подключения к интернету", ToastLength.Short).Show();
+            }
         }
 
         public override void OnBackPressed()
