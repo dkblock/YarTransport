@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProgramLogic", "ProgramLogi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutesCreator", "RoutesCreator\RoutesCreator.csproj", "{E3120C7A-BEFC-48B1-B6B5-FF793EF208CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YarTransportAndroidGUI", "YarTransportAndroidGUI\YarTransportAndroidGUI.csproj", "{E13D6567-37D0-4AF7-9106-E404955B127B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,12 @@ Global
 		{E3120C7A-BEFC-48B1-B6B5-FF793EF208CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3120C7A-BEFC-48B1-B6B5-FF793EF208CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3120C7A-BEFC-48B1-B6B5-FF793EF208CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E13D6567-37D0-4AF7-9106-E404955B127B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E13D6567-37D0-4AF7-9106-E404955B127B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E13D6567-37D0-4AF7-9106-E404955B127B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E13D6567-37D0-4AF7-9106-E404955B127B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E13D6567-37D0-4AF7-9106-E404955B127B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E13D6567-37D0-4AF7-9106-E404955B127B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

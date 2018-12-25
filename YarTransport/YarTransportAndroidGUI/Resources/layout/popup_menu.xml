@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <group android:id="@+id/menuGroup">
+    <item
+      android:id="@+id/TrolleyCheck"
+      android:textColor="#000000"
+      android:colorAccent="@color/green"
+      android:checkable="true"
+      android:checked="false"
+      android:title="@string/Trolley"/>
+    <item
+      android:id="@+id/BusCheck"
+      android:checkable="true"
+      android:checked="false"
+      android:title="@string/Bus"/>
+    <item
+      android:id="@+id/TramCheck"
+      android:checkable="true"
+      android:checked="false"
+       android:theme="@style/AppTheme"
+      android:title="@string/Tram"/>
+    <item
+      android:id="@+id/MiniBusCheck"
+      android:checkable="true"
+      android:checked="false"
+      android:title="@string/MiniBus"/>
+  </group>
+</menu>

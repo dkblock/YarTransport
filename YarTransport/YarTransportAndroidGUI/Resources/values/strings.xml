@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Что приедет</string>
+    <string name="action_settings">Settings</string>
+    <string name="Favourities">Избранное</string>
+    <string name="Filters">Фильтры</string>
+    <string name="Trolley">Тралик</string>
+    <string name="Bus">Бусик</string>
+    <string name="Tram">Трамвай</string>
+    <string name="MiniBus">МиниБусик</string>
+</resources>
