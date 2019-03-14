@@ -20,19 +20,25 @@
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		xmlns:tools="http://schemas.android.com/tools"
 		android:orientation="vertical"
+		android:descendantFocusability="beforeDescendants"
+		android:id="@+id/rootLayout"
+		android:focusableInTouchMode="true"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
-
-		<SearchableSpinner.Droid.Controls.SpinnerSearch
+		<AutoCompleteTextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:id="@+id/StartSpinner"
-		/>
-		<SearchableSpinner.Droid.Controls.SpinnerSearch
+			android:hint="Откуда"
+			android:backgroundTint="#DBDBDB"
+			android:completionThreshold="1"
+			android:id="@+id/Start" />
+		<AutoCompleteTextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:id="@+id/EndSpinner"
-		/>
+			android:hint="Куда"
+			android:backgroundTint="#DBDBDB"
+			android:completionThreshold="1"
+			android:id="@+id/End" />
 		<LinearLayout
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:orientation="horizontal"
@@ -48,7 +54,9 @@
 			android:layout_gravity="center"
 			android:textColor="@color/white"
 			android:background="@color/colorPrimary"
-			android:id="@+id/SearchButton"/>
+			android:id="@+id/SearchButton"
+			android:focusable="true"/>
+			
 		<ImageButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
