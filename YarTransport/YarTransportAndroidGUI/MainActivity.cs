@@ -10,6 +10,8 @@ using Android.Widget;
 using Android.Graphics;
 using Java.Lang;
 using Android.Net;
+using TransportLibrary;
+using Android.Views.InputMethods;
 
 namespace YarTransportAndroidGUI
 {
@@ -18,111 +20,88 @@ namespace YarTransportAndroidGUI
     {
         ListView text;
         List<SearchWaySystem.RouteInfo> list;
-        string s, s1;
+        string firstStation, secondStation;
         ProgressDialog progressDialog;
-        SpinnerSearch startSpinner, endSpinner;
+        CustomTextView startSpinner, endSpinner;
+        ImageButton favouritiesBtn;
         bool[] tral = new bool[] { true, true, true, true };
         string[] name = new string[] { "Троллейбус", "Автобус", "Трамвай", "Маршрутка" };
+        List<string> items;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.AppTheme);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
+
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
             SupportActionBar.Title = "Что приедет";
-            var fbtn = FindViewById<ImageButton>(Resource.Id.FavouritiesButton);
-            fbtn.Click += Fbtn_Click;
+
+            favouritiesBtn = FindViewById<ImageButton>(Resource.Id.FavouritiesButton);
+            favouritiesBtn.Click += Fbtn_Click;
+
             SearcherAdapter.DownloadDataBase(Assets.Open("allroutes.dat"), Assets.Open("allstations.dat"), Assets.Open("routematrix.dat"));
             SearcherAdapter.Init();
-            var stations = SearcherAdapter.GetAllStations();
-            List<SpinnerItem> items = new List<SpinnerItem>();
+
+            AllStations stations = SearcherAdapter.GetAllStations();
+            items = new List<string>();
 
             for (int i = 0; i < stations.Count; i++)
             {
-                items.Add(new SpinnerItem { Id = i, Name = stations.GetStation(i).StationName });
+                items.Add(stations.GetStation(i).StationName.ToString());
             }
 
-            startSpinner = FindViewById<SpinnerSearch>(Resource.Id.StartSpinner);
-            startSpinner.DefaultText = "Откуда";
-            startSpinner.ItemSelected += Spinner_ItemSelected;
-            startSpinner.NothingSelected += StartSpinner_NothingSelected;
-            endSpinner = FindViewById<SpinnerSearch>(Resource.Id.EndSpinner);
-            endSpinner.DefaultText = "Куда";
-            endSpinner.ItemSelected +=Spinner_ItemSelected;
-            endSpinner.NothingSelected += EndSpinner_NothingSelected;
-            if (SearcherAdapter.St != null)
-            {
-                var m = SearcherAdapter.GetPoint();
-                if (m[1] < m[0])
-                {
-                    startSpinner.SetItems(items, m[0], null);
-                    endSpinner.SetItems(items, m[1], null);
-                }
-                else
-                {
-                    endSpinner.SetItems(items, m[1], null);
-                    startSpinner.SetItems(items, m[0], null);                    
-                }
-            }
-            else
-            {
-                startSpinner.SetItems(items, -1, null);
-                endSpinner.SetItems(items, -1, null);
-            }
-            
+            startSpinner =new CustomTextView(FindViewById<AutoCompleteTextView>(Resource.Id.Start), new ArrayAdapter(this, Resource.Layout.list_item, items));
+            startSpinner.textView.ItemClick += _ItemClick;
+            endSpinner = new CustomTextView(FindViewById<AutoCompleteTextView>(Resource.Id.End), new ArrayAdapter(this, Resource.Layout.list_item, items));
+            endSpinner.textView.ItemClick += _ItemClick;
 
             text = FindViewById<ListView>(Resource.Id.Schedule);
             text.ItemClick += Text_ItemClick;
             var btn = FindViewById<Button>(Resource.Id.SearchButton);
             btn.Click += FindTransport;
 
-        }
-
-        private void StartSpinner_NothingSelected(object sender, AdapterView.NothingSelectedEventArgs e)
-        {
-            startSpinner.DefaultText = "Откуда";
-        }
-
-        private void EndSpinner_NothingSelected(object sender, AdapterView.NothingSelectedEventArgs e)
-        {
-            endSpinner.DefaultText = "Куда";
-            startSpinner.SetSelection(0);
-        }
-
-        private void Spinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-           if (startSpinner.SelectedItemId>=0&&endSpinner.SelectedItemId>=0&&SearcherAdapter.CheckRoute(startSpinner.SelectedItem.ToString(), endSpinner.SelectedItem.ToString()))
+            if (SearcherAdapter.St != null)
             {
-                var btn = FindViewById<ImageButton>(Resource.Id.FavouritiesButton);
-                btn.SetImageResource(Resource.Drawable.Contains);
+                var m = SearcherAdapter.GetPoint();
+                startSpinner.Text=items[m[0]];
+                endSpinner.Text=items[m[1]];
+                favouritiesBtn.SetImageResource(Resource.Drawable.Contains);
             }
-           else
-            {
-                var btn = FindViewById<ImageButton>(Resource.Id.FavouritiesButton);
-                btn.SetImageResource(Resource.Drawable.NotContains);
-            }
+
+            FindViewById<LinearLayout>(Resource.Id.rootLayout).RequestFocus();
+        }
+
+        private void _ItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            FindViewById<LinearLayout>(Resource.Id.rootLayout).RequestFocus();
+            InputMethodManager imm = (InputMethodManager)GetSystemService(Context.InputMethodService);
+            imm.ToggleSoftInput(InputMethodManager.ShowForced, 0);
+
+            if (SearcherAdapter.CheckRoute(startSpinner.Text, endSpinner.Text))
+                favouritiesBtn.SetImageResource(Resource.Drawable.Contains);
+            else           
+                favouritiesBtn.SetImageResource(Resource.Drawable.NotContains);          
         }
 
         private void Fbtn_Click(object sender, System.EventArgs e)
         {
-           if (startSpinner.SelectedItemId >= 0 && endSpinner.SelectedItemId >= 0)
+           if (items.Contains(startSpinner.Text)&&items.Contains(endSpinner.Text))
             {
-                s = FindViewById<SpinnerSearch>(Resource.Id.StartSpinner).SelectedItem.ToString();
-                s1 = FindViewById<SpinnerSearch>(Resource.Id.EndSpinner).SelectedItem.ToString();
-                if (!SearcherAdapter.CheckRoute(s, s1))
+                firstStation = startSpinner.Text;
+                secondStation = endSpinner.Text;
+
+                if (!SearcherAdapter.CheckRoute(firstStation, secondStation))
                 {
-                    SearcherAdapter.AddFavoriteRoute(new SearchWaySystem.FavoriteRoutesNode(s+"-"+s1,s,s1));
-                    var btn = FindViewById<ImageButton>(Resource.Id.FavouritiesButton);
-                    btn.SetImageResource(Resource.Drawable.Contains);
+                    SearcherAdapter.AddFavoriteRoute(new SearchWaySystem.FavoriteRoutesNode(firstStation+"-"+secondStation,firstStation,secondStation));
+                    favouritiesBtn.SetImageResource(Resource.Drawable.Contains);
                     Toast.MakeText(this,"Маршрут добавлен в избранное", ToastLength.Short).Show();
                 }
                 else
                 {
-                    SearcherAdapter.DeleteFavoriteRoute(s, s1);
-                    var btn = FindViewById<ImageButton>(Resource.Id.FavouritiesButton);
-                    btn.SetImageResource(Resource.Drawable.NotContains);
+                    SearcherAdapter.DeleteFavoriteRoute(firstStation, secondStation);
+                    favouritiesBtn.SetImageResource(Resource.Drawable.NotContains);
                     Toast.MakeText(this, "Маршрут удален из избранного", ToastLength.Short).Show();
                 }
                 SearcherAdapter.SaveFavoriteRoutes();
@@ -131,31 +110,31 @@ namespace YarTransportAndroidGUI
 
         private void FindTransport(object sender, System.EventArgs e)
         {
-            s = FindViewById<SpinnerSearch>(Resource.Id.StartSpinner).SelectedItem.ToString();
-            s1 = FindViewById<SpinnerSearch>(Resource.Id.EndSpinner).SelectedItem.ToString();
+            firstStation = startSpinner.Text;
+            secondStation = endSpinner.Text;
             bool isSelected;
-            if (s.Equals(FindViewById<SpinnerSearch>(Resource.Id.StartSpinner).DefaultText) || 
-                s1.Equals(FindViewById<SpinnerSearch>(Resource.Id.EndSpinner).DefaultText))
-                isSelected = false;
-            else
+
+            if (items.Contains(startSpinner.Text) && items.Contains(endSpinner.Text))
                 isSelected = true;
+            else
+                isSelected = false;
+
+
             var cm = ((ConnectivityManager)GetSystemService(Application.ConnectivityService)).ActiveNetworkInfo;
             bool isConnected;
+
             if (cm == null)
                 isConnected = false;
             else
-                isConnected= cm.IsConnected;
-            if (isConnected&&isSelected)
-            {
+                isConnected = cm.IsConnected;
+
+            if (isConnected && isSelected)
                 ShowInfoAsync();
-            }
             else
-            {
                 if (!isConnected)
                 Toast.MakeText(this, "Нет подключения к интернету", ToastLength.Short).Show();
-                else
-                    Toast.MakeText(this, "Чтобы начать поиск, выберите остановки", ToastLength.Short).Show();
-            }
+            else
+                Toast.MakeText(this, "Чтобы начать поиск, выберите остановки", ToastLength.Short).Show();
         }
 
         public override void OnBackPressed()
@@ -167,7 +146,8 @@ namespace YarTransportAndroidGUI
         {
             if (list == null)
                 list = new List<SearchWaySystem.RouteInfo>();
-            list = SearcherAdapter.GetRoutes(s, s1,tral[0],tral[1], tral[2], tral[3]);
+
+            list = SearcherAdapter.GetRoutes(firstStation, secondStation,tral[0],tral[1], tral[2], tral[3]);
         }
 
         public async void ShowInfoAsync()
@@ -177,12 +157,13 @@ namespace YarTransportAndroidGUI
             var adapter = new TextViewRouteInfoAdapter(this, list);
             text.Adapter = adapter;
             if (list==null||list.Count==0)
-                text.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string>() { "Не существует транспорта, следующего по заданному маршруту" });
+                text.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string>() { "Не существует транспорта, следующего по заданному маршруту либо транспорт ещё не вышел на маршрут" });
         }
 
         public string GetInfo(int position)
         {
-             string info = "";
+            string info = "";
+
             if (list[position].TransportModel != "Unknown")
             {
                 info += $"{list[position].TransportModel}\n\n";
