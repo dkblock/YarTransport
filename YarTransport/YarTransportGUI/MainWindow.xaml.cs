@@ -1,4 +1,5 @@
 ﻿using SearchWaySystem;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,14 +9,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using TransportLibrary;
+using YarTransportGUI.TransportServiceReference;
 
 namespace YarTransportGUI
 {
     public partial class MainWindow : Window
     {
         private List<string> _stations;
-        private Searcher _searcher;
+        private TransportServiceClient _client;
         private List<RouteInfo> _routes;
         private FavoriteRoutes _favoriteRoutes;
 
@@ -28,49 +29,18 @@ namespace YarTransportGUI
         {
             InitializeComponent();
 
-            _searcher = InitSearcher();
+            _client = new TransportServiceClient();
+            _stations = _client.GetStations().ToList();
             InitFavoriteRoutes();
             InitPopups(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
             InitPopups(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
         }     
 
-        private Searcher InitSearcher()
-        {
-            AllRoutes allRoutes;
-            AllStations allStations;
-            RouteMatrix routeMatrix;
-            var formatter = new BinaryFormatter();
-
-            using (var fs = new FileStream("allroutes.dat", FileMode.OpenOrCreate))
-            {
-                allRoutes = (AllRoutes)formatter.Deserialize(fs);
-            }
-
-            using (var fs = new FileStream("allstations.dat", FileMode.OpenOrCreate))
-            {
-                allStations = (AllStations)formatter.Deserialize(fs);
-
-                _stations = new List<string>();
-
-                for (int i = 0; i < allStations.Count; i++)
-                    _stations.Add(allStations.GetStation(i).StationName);
-
-                _stations.Sort();
-            }
-
-            using (var fs = new FileStream("routematrix.dat", FileMode.OpenOrCreate))
-            {
-                routeMatrix = (RouteMatrix)formatter.Deserialize(fs);
-            }
-
-            return new Searcher(allRoutes, allStations, routeMatrix);
-        }
-
         private void InitFavoriteRoutes()
         {
             var formatter = new BinaryFormatter();
 
-            using (var fs = new FileStream("favoriteroutes.dat", FileMode.OpenOrCreate))
+            using (var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"data\favoriteroutes.dat", FileMode.OpenOrCreate))
             {
                 _favoriteRoutes = (FavoriteRoutes)formatter.Deserialize(fs);
             }
@@ -134,7 +104,7 @@ namespace YarTransportGUI
                     _isTramChecked = CB_Tram.IsChecked ?? false;
                     _isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
 
-                    _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, _isBusChecked, _isTrolleyChecked, _isTramChecked, _isMiniBusChecked);
+                    _routes = _client.GetRoutes(stationOfDeparture, stationOfDestination, _isBusChecked, _isTrolleyChecked, _isTramChecked, _isMiniBusChecked).ToList();
 
                     if (_routes != null)
                         DisplayRoutes(_routes);
@@ -269,6 +239,11 @@ namespace YarTransportGUI
             else
                 return false; 
     
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            _client.Close();
         }
     }
 }

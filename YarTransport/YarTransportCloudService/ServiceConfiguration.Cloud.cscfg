@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="YarTransportCloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="5" osVersion="*" schemaVersion="2015-04.2.6">
+  <Role name="YarTransportWebService">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=yartransportcloudservice;AccountKey=rSWv0iTnB/6AA3vaR4RzWkZtooyP6Jb8TnQ7sELVqdVz8/9Zsyv1a4CKMfAgovJUGH2eShkiTmz+v/xr+Odv2Q==" />
+      <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" value="DefaultEndpointsProtocol=https;AccountName=yartransportcloudservice;AccountKey=rSWv0iTnB/6AA3vaR4RzWkZtooyP6Jb8TnQ7sELVqdVz8/9Zsyv1a4CKMfAgovJUGH2eShkiTmz+v/xr+Odv2Q==" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>

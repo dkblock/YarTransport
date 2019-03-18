@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SearchWaySystem" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SearchWaySystem" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ArrayOfRouteInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RouteInfo" nillable="true" type="tns:RouteInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRouteInfo" nillable="true" type="tns:ArrayOfRouteInfo" />
+  <xs:complexType name="RouteInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ArrivalTime" nillable="true" type="tns:RouteTime" />
+      <xs:element minOccurs="0" name="RouteType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Schedule" nillable="true" type="tns:ArrayOfScheduleNode" />
+      <xs:element minOccurs="0" name="TransportModel" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RouteInfo" nillable="true" type="tns:RouteInfo" />
+  <xs:complexType name="RouteTime">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Hour" type="xs:int" />
+      <xs:element minOccurs="0" name="Minute" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RouteTime" nillable="true" type="tns:RouteTime" />
+  <xs:complexType name="ArrayOfScheduleNode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ScheduleNode" nillable="true" type="tns:ScheduleNode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfScheduleNode" nillable="true" type="tns:ArrayOfScheduleNode" />
+  <xs:complexType name="ScheduleNode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="StationName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Time" nillable="true" type="tns:RouteTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ScheduleNode" nillable="true" type="tns:ScheduleNode" />
+</xs:schema>

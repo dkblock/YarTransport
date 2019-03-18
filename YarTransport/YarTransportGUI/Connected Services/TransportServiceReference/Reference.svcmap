@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c624dd73-a382-47be-9b13-7170450c8e7f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://yartransportcloudservice.cloudapp.net/TransportService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="TransportService4.xsd" MetadataType="Schema" ID="cbcc86f0-5a60-42e5-b332-260f4f743718" SourceId="1" SourceUrl="http://yartransportcloudservice.cloudapp.net/TransportService.svc?xsd=xsd2" />
+    <MetadataFile FileName="TransportService41.xsd" MetadataType="Schema" ID="113c0419-fd82-4eff-812b-676b33580bbb" SourceId="1" SourceUrl="http://yartransportcloudservice.cloudapp.net/TransportService.svc?xsd=xsd1" />
+    <MetadataFile FileName="TransportService42.xsd" MetadataType="Schema" ID="e09abcea-a6f4-4156-b436-52bcb14c5c8f" SourceId="1" SourceUrl="http://yartransportcloudservice.cloudapp.net/TransportService.svc?xsd=xsd0" />
+    <MetadataFile FileName="TransportService1.disco" MetadataType="Disco" ID="ceb362af-ac09-4422-b530-9a8a6e8b6fbb" SourceId="1" SourceUrl="http://yartransportcloudservice.cloudapp.net/TransportService.svc?disco" />
+    <MetadataFile FileName="TransportService1.wsdl" MetadataType="Wsdl" ID="1377c6c0-cc0c-4cfc-a337-5598eea6693f" SourceId="1" SourceUrl="http://yartransportcloudservice.cloudapp.net/TransportService.svc?wsdl" />
+    <MetadataFile FileName="TransportService43.xsd" MetadataType="Schema" ID="091b7d8f-4db3-464c-922a-41f383560e86" SourceId="1" SourceUrl="http://yartransportcloudservice.cloudapp.net/TransportService.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

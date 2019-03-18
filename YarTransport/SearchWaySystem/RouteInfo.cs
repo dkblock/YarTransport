@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace SearchWaySystem
-{
+{ 
+    [DataContract]
     public class RouteInfo
     {
+        [DataMember]
         public string RouteType { get; private set; }
+
+        [DataMember]
         public string TransportModel { get; private set; }
-        public List<ScheduleNode> Schedule { get; private set; } 
+
+        [DataMember]
+        public List<ScheduleNode> Schedule { get; private set; }
+
+        [DataMember]
         public RouteTime ArrivalTime { get; private set; }
 
         public RouteInfo(string routeType, string transportModel, List<ScheduleNode> schedule, string pointOfDeparture)
@@ -61,9 +70,13 @@ namespace SearchWaySystem
         }
     }
 
+    [DataContract]
     public class ScheduleNode
     {
+        [DataMember]
         public string StationName { get; private set; }
+
+        [DataMember]
         public RouteTime Time { get; private set; }
 
         public ScheduleNode(string stationName, string time)
@@ -84,9 +97,13 @@ namespace SearchWaySystem
         }
     }
 
+    [DataContract]
     public class RouteTime : IComparable
     {
+        [DataMember]
         public int Hour { get; private set; }
+
+        [DataMember]
         public int Minute { get; private set; }
 
         public RouteTime(string time)

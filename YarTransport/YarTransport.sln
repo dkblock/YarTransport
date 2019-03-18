@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportLibrary", "TransportLibrary\TransportLibrary.csproj", "{AEEFE54D-990D-424F-AD05-D36D6BF4B2D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YarTransportGUI", "YarTransportGUI\YarTransportGUI.csproj", "{30CF41BC-1DA9-4B52-B228-B30213A864EB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{21715187-8A8D-42FF-8DC4-7AA5C2CAA20B} = {21715187-8A8D-42FF-8DC4-7AA5C2CAA20B}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StationsCreator", "StationsCreator\GMap\StationsCreator.csproj", "{46C1C60B-22E7-4F42-9F9F-6250BECA3DCD}"
 EndProject
@@ -18,6 +21,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutesCreator", "RoutesCreator\RoutesCreator.csproj", "{E3120C7A-BEFC-48B1-B6B5-FF793EF208CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YarTransportAndroidGUI", "YarTransportAndroidGUI\YarTransportAndroidGUI.csproj", "{E13D6567-37D0-4AF7-9106-E404955B127B}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "YarTransportCloudService", "YarTransportCloudService\YarTransportCloudService.ccproj", "{B9153365-B53E-492E-B7D4-9F794C319536}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YarTransportWebService", "YarTransportWebService\YarTransportWebService.csproj", "{21715187-8A8D-42FF-8DC4-7AA5C2CAA20B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +58,14 @@ Global
 		{E13D6567-37D0-4AF7-9106-E404955B127B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E13D6567-37D0-4AF7-9106-E404955B127B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E13D6567-37D0-4AF7-9106-E404955B127B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B9153365-B53E-492E-B7D4-9F794C319536}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9153365-B53E-492E-B7D4-9F794C319536}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9153365-B53E-492E-B7D4-9F794C319536}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9153365-B53E-492E-B7D4-9F794C319536}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21715187-8A8D-42FF-8DC4-7AA5C2CAA20B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21715187-8A8D-42FF-8DC4-7AA5C2CAA20B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21715187-8A8D-42FF-8DC4-7AA5C2CAA20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21715187-8A8D-42FF-8DC4-7AA5C2CAA20B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
