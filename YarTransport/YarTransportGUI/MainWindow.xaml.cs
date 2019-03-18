@@ -189,7 +189,7 @@ namespace YarTransportGUI
 
         private void SerializeFavoriteRoutes()
         {
-            using (var fs = new FileStream("favoriteroutes.dat", FileMode.OpenOrCreate))
+            using (var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"data\favoriteroutes.dat", FileMode.OpenOrCreate))
             {
                 var formatter = new BinaryFormatter();
                 formatter.Serialize(fs, _favoriteRoutes);
