@@ -16,7 +16,7 @@ namespace YarTransportGUI
     public partial class MainWindow : Window
     {
         private List<string> _stations;
-        private TransportServiceClient _client;
+        private Searcher _searcher;
         private List<RouteInfo> _routes;
         private FavoriteRoutes _favoriteRoutes;
 
@@ -29,8 +29,8 @@ namespace YarTransportGUI
         {
             InitializeComponent();
 
-            _client = new TransportServiceClient();
-            _stations = _client.GetStations().ToList();
+            _searcher = new Searcher();
+            _stations = _searcher.GetStations();
             InitFavoriteRoutes();
             InitPopups(TB_PointOfDeparture, Popup_StationsOfDeparture, LB_StationsOfDeparture);
             InitPopups(TB_PointOfDestination, Popup_StationsOfDestination, LB_StationsOfDestination);
@@ -40,7 +40,7 @@ namespace YarTransportGUI
         {
             var formatter = new BinaryFormatter();
 
-            using (var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"data\favoriteroutes.dat", FileMode.OpenOrCreate))
+            using (var fs = new FileStream(@"data\favoriteroutes.dat", FileMode.OpenOrCreate))
             {
                 _favoriteRoutes = (FavoriteRoutes)formatter.Deserialize(fs);
             }
@@ -104,7 +104,7 @@ namespace YarTransportGUI
                     _isTramChecked = CB_Tram.IsChecked ?? false;
                     _isMiniBusChecked = CB_MiniBus.IsChecked ?? false;
 
-                    _routes = _client.GetRoutes(stationOfDeparture, stationOfDestination, _isBusChecked, _isTrolleyChecked, _isTramChecked, _isMiniBusChecked).ToList();
+                    _routes = _searcher.GetRoutes(stationOfDeparture, stationOfDestination, _isBusChecked, _isTrolleyChecked, _isTramChecked, _isMiniBusChecked);
 
                     if (_routes != null)
                         DisplayRoutes(_routes);
@@ -189,7 +189,7 @@ namespace YarTransportGUI
 
         private void SerializeFavoriteRoutes()
         {
-            using (var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"data\favoriteroutes.dat", FileMode.OpenOrCreate))
+            using (var fs = new FileStream(@"data\favoriteroutes.dat", FileMode.OpenOrCreate))
             {
                 var formatter = new BinaryFormatter();
                 formatter.Serialize(fs, _favoriteRoutes);
@@ -243,7 +243,7 @@ namespace YarTransportGUI
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            _client.Close();
+            //_searcher.Close();
         }
     }
 }

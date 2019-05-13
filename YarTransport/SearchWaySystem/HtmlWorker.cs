@@ -86,36 +86,40 @@ namespace SearchWaySystem
                 if (searchOnDirectRoute)
                 {
                     tableNodes.RemoveRange(reverseRouteTableStart, allRoutes[route].ReverseRoute.Count);
-                    return ParseArrivalTime(route, stationOfDeparture, out url, out doc, ref tableNodes);
+                    return ParseArrivalTime(route, stationOfDeparture,  url,  doc, ref tableNodes);
                 }
                 else
                 {
                     tableNodes.RemoveRange(0, allRoutes[route].DirectRoute.Count);
-                    return ParseArrivalTime(route, stationOfDeparture, out url, out doc, ref tableNodes);
+                    return ParseArrivalTime(route, stationOfDeparture,  url,  doc, ref tableNodes);
                 }
             }
             else
                 return null;
         }
 
-        private RouteTime ParseArrivalTime(Route route, string stationOfDeparture, out string url, out HtmlDocument doc, ref List<HtmlNode> tableNodes)
+        private RouteTime ParseArrivalTime(Route route, string stationOfDeparture, string url, HtmlDocument doc, ref List<HtmlNode> tableNodes)
         {
-            var node = (from t in tableNodes where WebUtility.HtmlDecode(t.InnerText).Contains(stationOfDeparture) select t).First();
-            var page = node.Attributes["href"].Value.Replace("amp;", "");
+            var node = (from t in tableNodes where WebUtility.HtmlDecode(t.InnerText).Contains(stationOfDeparture) select t).FirstOrDefault();
 
-            url = $"http://yartr.ru/{page}";
-            doc = _webget.Load(url);
-            tableNodes = doc.DocumentNode.SelectNodes("//body").ToList();
-
-            var tableStrings = ReplaceUnnecessarySymbols(WebUtility.HtmlDecode(tableNodes[0].InnerText), stationOfDeparture).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var routeToFind = GetStringToFind(route);
-
-            for (int i = 0; i < tableNodes.Count; i++)
+            if (node != null)
             {
-                var item = $"{tableStrings[i]} {tableStrings[i + 1]}";
+                var page = node.Attributes["href"].Value.Replace("amp;", "");
 
-                if (item == routeToFind && tableStrings[i + 2] != "рейсов")
-                    return new RouteTime(tableStrings[i + 2].Replace('.', ':'));
+                url = $"http://yartr.ru/{page}";
+                doc = _webget.Load(url);
+                tableNodes = doc.DocumentNode.SelectNodes("//body").ToList();
+
+                var tableStrings = ReplaceUnnecessarySymbols(WebUtility.HtmlDecode(tableNodes[0].InnerText), stationOfDeparture).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var routeToFind = GetStringToFind(route);
+
+                for (int i = 0; i < tableNodes.Count; i++)
+                {
+                    var item = $"{tableStrings[i]} {tableStrings[i + 1]}";
+
+                    if (item == routeToFind && tableStrings[i + 2] != "рейсов")
+                        return new RouteTime(tableStrings[i + 2].Replace('.', ':'));
+                }
             }
 
             return null;

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using TransportLibrary;
 
 namespace SearchWaySystem
@@ -10,6 +13,7 @@ namespace SearchWaySystem
         private AllStations _allStations;
         private RouteMatrix _routeMatrix;
         private HtmlWorker _htmlWorker;
+        private List<string> _stations;
 
         public Searcher(AllRoutes allRoutes, AllStations allStations, RouteMatrix routeMatrix)
         {
@@ -17,6 +21,40 @@ namespace SearchWaySystem
             _allStations = allStations;
             _routeMatrix = routeMatrix;
             _htmlWorker = new HtmlWorker();
+        }
+
+        public Searcher()
+        {            
+            _htmlWorker = new HtmlWorker();
+
+            var formatter = new BinaryFormatter();
+
+            using (var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"data\allroutes.dat", FileMode.Open, FileAccess.Read))
+            {
+                _allRoutes = (AllRoutes)formatter.Deserialize(fs);
+            }
+
+            using (var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"data\allstations.dat", FileMode.Open, FileAccess.Read))
+            {
+                _allStations = (AllStations)formatter.Deserialize(fs);
+
+                _stations = new List<string>();
+
+                for (int i = 0; i < _allStations.Count; i++)
+                    _stations.Add(_allStations.GetStation(i).StationName);
+
+                _stations.Sort();
+            }
+
+            using (var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"data\routematrix.dat", FileMode.Open, FileAccess.Read))
+            {
+                _routeMatrix = (RouteMatrix)formatter.Deserialize(fs);
+            }
+        }
+
+        public List<string> GetStations()
+        {
+            return _stations;
         }
 
         public List<RouteInfo> GetRoutes(string pointOfDeparture, string pointOfDestination, bool isBusChecked, bool isTrolleyChecked, bool isTramChecked, bool isMiniBusChecked)

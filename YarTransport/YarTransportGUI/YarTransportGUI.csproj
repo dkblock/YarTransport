@@ -125,9 +125,18 @@
     <None Include="Connected Services\TransportServiceReference\TransportService43.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="data\favoriteroutes.dat">
+    <Content Include="data\allroutes.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\allstations.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="data\favoriteroutes.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="data\routematrix.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\DataSources\SearchWaySystem.RouteInfo.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
